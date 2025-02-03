@@ -14,7 +14,7 @@ import com.Project.MyExpensePal.Service.LimitsService;
 @RestController
 @CrossOrigin(origins = "*")
 public class LimitsController {
-
+	
 	@Autowired
 	private LimitsService limitsService;
 	
@@ -27,4 +27,5 @@ public class LimitsController {
 	public ResponseEntity<String> updateLimit(@RequestBody LimitsEntity limitsEntity){
 		return limitsService.updateLimit(limitsEntity);
 	}
+
 }
