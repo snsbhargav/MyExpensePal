@@ -11,7 +11,9 @@ public interface UserService {
 
 	public String saveUser(UserEntity userEntity);
 
-	public ResponseEntity<UserModel> retrieveUserById(Long userId);
+	public ResponseEntity<UserEntity> retrieveUserById(Long userId);
 
 	public ResponseEntity<Boolean> deleteUserFromDatabase(Long userId);
+	
+	public ResponseEntity<Boolean> isUserAlreadyExists(String email);
 }

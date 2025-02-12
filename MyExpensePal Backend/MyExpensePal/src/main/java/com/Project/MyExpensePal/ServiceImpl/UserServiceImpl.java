@@ -24,11 +24,11 @@ public class UserServiceImpl implements UserService {
 		return "User Saved Successfully.";
 	}
 
-	public ResponseEntity<UserModel> retrieveUserById(Long userId) {
+	public ResponseEntity<UserEntity> retrieveUserById(Long userId) {
 		UserEntity userEntity = userRepo.findById(userId).orElseThrow(() -> new USER_NOT_FOUND_EXCEPTION());
 		if (userEntity == null)
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(UserModel.convertEntityToModel(userEntity), HttpStatus.OK);
+		return new ResponseEntity<>(userEntity, HttpStatus.OK);
 
 	}
 
@@ -37,6 +37,17 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		userRepo.deleteById(userId);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Boolean> isUserAlreadyExists(String email) {
+		// TODO Auto-generated method stub
+		UserEntity userEntity = userRepo.findUserByEmail(email);
+		if(userEntity == null)
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		else
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			
 	}
 
 }

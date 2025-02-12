@@ -1,0 +1,29 @@
+# Ignore target and build directories
+target/
+build/
+
+# Ignore IntelliJ & Eclipse project files
+.idea/
+*.iml
+*.class
+
+# Ignore Maven & Gradle dependencies
+.mvn/
+*.jar
+*.war
+*.ear
+
+# Ignore logs and temp files
+logs/
+*.log
+*.tmp
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables & secrets
+.env
+*.key
+*.pem
+ 
