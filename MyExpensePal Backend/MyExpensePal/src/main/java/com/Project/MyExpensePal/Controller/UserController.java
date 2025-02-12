@@ -37,11 +37,14 @@ public class UserController {
 	@GetMapping("/tester1")
 	public String test() {
 		return "test successful";
+		//Testing the STS push
 	}
 
 	@DeleteMapping("removeUser/{userId}")
 	public ResponseEntity<Boolean> removeUser(@PathVariable("userId") Long userId) {
 		return userService.deleteUserFromDatabase(userId);
 	}
+	
+	
 
 }
