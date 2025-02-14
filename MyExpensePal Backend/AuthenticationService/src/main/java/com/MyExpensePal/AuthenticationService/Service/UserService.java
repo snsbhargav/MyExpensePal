@@ -34,7 +34,6 @@ public class UserService {
 	}
 
 	public ResponseEntity<String> validateUser(UserLoginDto loginDto) {
-		//TODO check password then generate token.
 		UserEntity user = userRepository.findByEmail(loginDto.getEmail());
 		
 		if(user != null && passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
