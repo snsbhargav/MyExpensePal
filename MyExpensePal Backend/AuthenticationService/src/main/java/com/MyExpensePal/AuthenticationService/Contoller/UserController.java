@@ -15,7 +15,7 @@ import com.MyExpensePal.AuthenticationService.Entity.UserEntity;
 import com.MyExpensePal.AuthenticationService.Service.UserService;
 
 @RestController
-@RequestMapping("/api/auth/")
+@RequestMapping("/auth/")
 public class UserController {
 	
 	@Autowired
