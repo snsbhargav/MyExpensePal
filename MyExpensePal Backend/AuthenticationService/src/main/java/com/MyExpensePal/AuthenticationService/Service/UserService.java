@@ -1,6 +1,5 @@
 package com.MyExpensePal.AuthenticationService.Service;
 
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,7 @@ import com.MyExpensePal.AuthenticationService.Entity.UserEntity;
 import com.MyExpensePal.AuthenticationService.Mappers.UserMapper;
 import com.MyExpensePal.AuthenticationService.Repository.UserRepository;
 
-import io.jsonwebtoken.security.Password;
+import io.jsonwebtoken.Claims;
 
 @Service
 public class UserService {
@@ -40,6 +39,24 @@ public class UserService {
 			return new ResponseEntity<String>(jwtService.generateToken(loginDto.getEmail()), HttpStatus.OK);
 		}
 		return new ResponseEntity<String> ("No User Found", HttpStatus.NOT_FOUND); 
+	}
+
+	public ResponseEntity<UserDto> validateToken(String token) {
+		final Claims claims = jwtService.getClaims(token);
+		String email = jwtService.getSubject(claims);
+		UserDto user = findUserByEmail(email);
+		if(user != null && jwtService.isTokenValid(claims))
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		else {
+			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
+	public UserDto findUserByEmail(String email) {
+		UserEntity user = userRepository.findByEmail(email);
+		if(user == null)
+			return null;
+		return UserMapper.EntityToDto(user);
 	}
 
 }
