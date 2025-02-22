@@ -6,6 +6,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,16 +41,22 @@ public class JwtValidationFilter implements WebFilter {
 		} else if (token == null)
 			return createUnauthorizedException(exchange, "Invalid or Bearer token Missing");
 
+		//Creating the header to pass it for Authentication.
+		HttpHeaders header = new HttpHeaders();
+		header.set("Authorization", token);
+		HttpEntity<String> httpEntity = new HttpEntity<>(header);
 		
+		//Slicing out the token
 		token = token.substring(7);
 		try {
-			isTokenValid = restTemplate.postForEntity("lb://AUTHENTICATION-SERVICE/auth/validateToken?token=" + token,
-					null, Boolean.class);
+			isTokenValid = restTemplate.postForEntity("lb://AUTHENTICATION-SERVICE/auth/validateToken",
+					httpEntity, Boolean.class);
 
 			if (!isTokenValid.getBody()) {
 				return createUnauthorizedException(exchange, "Invalid Token");
 			} else
 				return chain.filter(exchange);
+			
 		} catch (HttpClientErrorException.Unauthorized e) {
 			return createUnauthorizedException(exchange, "Invalid Token");
 		} catch (Exception e) {
