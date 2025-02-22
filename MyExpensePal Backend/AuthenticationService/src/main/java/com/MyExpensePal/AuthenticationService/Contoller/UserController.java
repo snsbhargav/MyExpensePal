@@ -33,8 +33,13 @@ public class UserController {
 	}
 	
 	@PostMapping("/validateToken")
-	public ResponseEntity<UserDto> validateToken(@RequestParam String token){
+	public ResponseEntity<Boolean> validateToken(@RequestParam String token){
 		return userService.validateToken(token);
+	}
+	
+	@GetMapping("test")
+	public String test() {
+		return "test";
 	}
 
 }
