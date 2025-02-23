@@ -20,7 +20,7 @@ import lombok.ToString;
 @ToString
 public class ExpensesModel {
 	
-	private Long expenseId;
+	private UUID expenseId;
 	private UUID userId;
 	private String expenseName;
 	private Integer expense;
@@ -50,9 +50,6 @@ public class ExpensesModel {
 		
 		return ExpenseEntity.builder()
 				.expenseId(expensesModel.getExpenseId())
-//				.user(UserEntity.builder()
-//						.userId(expensesModel.getUserId())
-//						.build())
 				.userId(expensesModel.getUserId())
 				.transactionType(expensesModel.getTransactionType())
 				.location(expensesModel.getLocation())

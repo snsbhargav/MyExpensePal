@@ -23,8 +23,8 @@ public class LimitsEntity {
 
 	// Food, Bills, Entertainment
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long limitId;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID limitId;
 	@Column(nullable = false)
 	private UUID userId;
 	private Long limitForFood;

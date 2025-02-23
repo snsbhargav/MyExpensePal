@@ -38,8 +38,9 @@ public class ExpenseEntity {
 
 	//Expense name, Expensetype(food, entertainment etc), picture, location, amount, credit/debit, datetime, reciepts
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long expenseId;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	//USE UUID for expense Id
+	private UUID expenseId;
 	@Column(nullable = false)
 	private UUID userId;
 	private String expenseName;

@@ -31,7 +31,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return new ResponseEntity<String>("Expense Saved successfully.", HttpStatus.CREATED);
 	}
 
-	public ResponseEntity<ExpensesModel> retreiveExpenseByExpenseId(Long expenseId) {
+	public ResponseEntity<ExpensesModel> retreiveExpenseByExpenseId(UUID expenseId) {
 		ExpenseEntity expenseEntity = expensesRepository.findById(expenseId)
 				.orElseThrow(() -> new EXPENSE_ID_NOT_FOUND());
 		if (expenseEntity == null)
@@ -59,7 +59,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return new ResponseEntity<String>("Update successful", HttpStatus.OK);
 	}
 
-	public ResponseEntity<String> deleteExpense(Long expenseId) {
+	public ResponseEntity<String> deleteExpense(UUID expenseId) {
 		expensesRepository.deleteById(expenseId);
 		return new ResponseEntity<String>("Expense deleted successfully", HttpStatus.OK);
 	}

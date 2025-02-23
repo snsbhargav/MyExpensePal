@@ -17,13 +17,13 @@ public interface ExpenseService {
 
 	public ResponseEntity<String> saveExpenseToDatabase(ExpensesModel expensesModel);
 
-	public ResponseEntity<ExpensesModel> retreiveExpenseByExpenseId(Long expenseId);
+	public ResponseEntity<ExpensesModel> retreiveExpenseByExpenseId(UUID expenseId);
 
 	public ResponseEntity<List<ExpensesModel>> retreiveExpenseByUserId(UUID userId) throws NO_USER_EXPENSES_FOUND_EXCEPTION;
 
 	public ResponseEntity<String> updateExpense(ExpensesModel expensesModel);
 
-	public ResponseEntity<String> deleteExpense(Long expenseId);
+	public ResponseEntity<String> deleteExpense(UUID expenseId);
 
 	public ResponseEntity<List<ExpensesModel>> tenLatestTransactions(UUID userId) throws NO_USER_EXPENSES_FOUND_EXCEPTION;
 

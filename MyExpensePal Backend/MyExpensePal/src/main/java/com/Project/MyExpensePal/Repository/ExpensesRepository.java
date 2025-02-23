@@ -11,7 +11,7 @@ import com.Project.MyExpensePal.Entity.ExpenseEntity;
 
 
 @Repository
-public interface ExpensesRepository extends JpaRepository<ExpenseEntity, Long> {
+public interface ExpensesRepository extends JpaRepository<ExpenseEntity, UUID> {
 
 	@Query(nativeQuery = true, value = "SELECT * FROM EXPENSES_ENTITY WHERE USER_ID=?")
 	List<ExpenseEntity> findByUserId(UUID userId);

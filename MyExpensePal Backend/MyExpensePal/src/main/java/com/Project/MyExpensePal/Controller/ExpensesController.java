@@ -33,7 +33,7 @@ public class ExpensesController {
 	}
 
 	@GetMapping("/expense/expenseId/{expenseId}")
-	public ResponseEntity<ExpensesModel> getExpenseByExpenseId(@PathVariable("expenseId") Long expenseId) {
+	public ResponseEntity<ExpensesModel> getExpenseByExpenseId(@PathVariable("expenseId") UUID expenseId) {
 		return expenseService.retreiveExpenseByExpenseId(expenseId);
 	}
 
@@ -49,7 +49,7 @@ public class ExpensesController {
 	}
 
 	@DeleteMapping("/deleteExpense/{expenseId}")
-	public ResponseEntity<String> deleteExpense(@PathVariable("expenseId") Long expenseId) {
+	public ResponseEntity<String> deleteExpense(@PathVariable("expenseId") UUID expenseId) {
 		return expenseService.deleteExpense(expenseId);
 	}
 
