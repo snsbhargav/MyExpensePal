@@ -1,14 +1,11 @@
 package com.Project.MyExpensePal.Model;
 
 import java.util.Date;
+import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.Project.MyExpensePal.Entity.ExpensesEntity;
-import com.Project.MyExpensePal.Entity.UserEntity;
+import com.Project.MyExpensePal.Entity.ExpenseEntity;
 import com.Project.MyExpensePal.Enum.ExpenseType;
 import com.Project.MyExpensePal.Enum.TransactionType;
-import com.Project.MyExpensePal.ServiceImpl.ExpenseServiceImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +21,7 @@ import lombok.ToString;
 public class ExpensesModel {
 	
 	private Long expenseId;
-	private Long userId;
+	private UUID userId;
 	private String expenseName;
 	private Integer expense;
 	private ExpenseType expenseType;
@@ -34,10 +31,10 @@ public class ExpensesModel {
 	private Date time;
 	
 	
-	public static ExpensesModel expenseEntityToModel(ExpensesEntity expenseEntity) {
+	public static ExpensesModel expenseEntityToModel(ExpenseEntity expenseEntity) {
 		return ExpensesModel.builder()
 				.expenseId(expenseEntity.getExpenseId())
-				.userId(expenseEntity.getUser().getUserId())
+				.userId(expenseEntity.getUserId())
 				.transactionType(expenseEntity.getTransactionType())
 				.location(expenseEntity.getLocation())
 				.expenseType(expenseEntity.getExpenseType())
@@ -49,13 +46,14 @@ public class ExpensesModel {
 	}
 	
 
-	public static ExpensesEntity expenseModelToEntity(ExpensesModel expensesModel) {
+	public static ExpenseEntity expenseModelToEntity(ExpensesModel expensesModel) {
 		
-		return ExpensesEntity.builder()
+		return ExpenseEntity.builder()
 				.expenseId(expensesModel.getExpenseId())
-				.user(UserEntity.builder()
-						.userId(expensesModel.getUserId())
-						.build())
+//				.user(UserEntity.builder()
+//						.userId(expensesModel.getUserId())
+//						.build())
+				.userId(expensesModel.getUserId())
 				.transactionType(expensesModel.getTransactionType())
 				.location(expensesModel.getLocation())
 				.expenseType(expensesModel.getExpenseType())

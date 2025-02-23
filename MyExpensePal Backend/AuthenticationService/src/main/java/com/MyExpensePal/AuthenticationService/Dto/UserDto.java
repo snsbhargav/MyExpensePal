@@ -1,6 +1,7 @@
 package com.MyExpensePal.AuthenticationService.Dto;
 
 import java.sql.Date;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,11 +16,10 @@ import lombok.ToString;
 @Data
 public class UserDto {
 
-	private Long userId;
+	private UUID userId;
 	private String firstName;
 	private String lastName;
 	private String email; // Used as username
-	private String password;
 	private String gender;
 	private Date dateOfBirth;
 	private String bio;

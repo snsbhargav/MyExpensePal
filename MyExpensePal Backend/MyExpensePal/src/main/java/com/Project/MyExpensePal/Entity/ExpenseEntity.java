@@ -3,11 +3,13 @@ package com.Project.MyExpensePal.Entity;
 
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import com.Project.MyExpensePal.Enum.ExpenseType;
 import com.Project.MyExpensePal.Enum.TransactionType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,15 +34,14 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ExpensesEntity {
+public class ExpenseEntity {
 
 	//Expense name, Expensetype(food, entertainment etc), picture, location, amount, credit/debit, datetime, reciepts
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long expenseId;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private UserEntity user;
+	@Column(nullable = false)
+	private UUID userId;
 	private String expenseName;
 	private Integer expense;
 	//Add receipt

@@ -1,6 +1,7 @@
 package com.MyExpensePal.AuthenticationService.Entity;
 
 import java.sql.Date;
+import java.util.UUID;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,8 +21,8 @@ import lombok.ToString;
 @ToString
 public class UserEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID userId;
 	private String firstName;
 	private String lastName;
 	private String email; // Used as username
@@ -30,5 +31,6 @@ public class UserEntity {
 	private Date dateOfBirth;
 	private String bio;
 	private String phone;
+//	TODO Add for profile picture
 
 }

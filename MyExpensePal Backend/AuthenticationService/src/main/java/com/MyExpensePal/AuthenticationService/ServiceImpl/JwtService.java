@@ -1,4 +1,4 @@
-package com.MyExpensePal.AuthenticationService.Service;
+package com.MyExpensePal.AuthenticationService.ServiceImpl;
 
 
 import java.util.Base64;

@@ -2,15 +2,14 @@ package com.Project.MyExpensePal.ServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.Project.MyExpensePal.Entity.ExpensesEntity;
+import com.Project.MyExpensePal.Entity.ExpenseEntity;
 import com.Project.MyExpensePal.Exception.EXPENSE_ID_NOT_FOUND;
 import com.Project.MyExpensePal.Exception.NO_USER_EXPENSES_FOUND_EXCEPTION;
 import com.Project.MyExpensePal.Model.ExpensesModel;
@@ -33,7 +32,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	public ResponseEntity<ExpensesModel> retreiveExpenseByExpenseId(Long expenseId) {
-		ExpensesEntity expenseEntity = expensesRepository.findById(expenseId)
+		ExpenseEntity expenseEntity = expensesRepository.findById(expenseId)
 				.orElseThrow(() -> new EXPENSE_ID_NOT_FOUND());
 		if (expenseEntity == null)
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -41,11 +40,11 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return new ResponseEntity<ExpensesModel>(ExpensesModel.expenseEntityToModel(expenseEntity), HttpStatus.FOUND);
 	}
 
-	public ResponseEntity<List<ExpensesModel>> retreiveExpenseByUserId(Long userId)
+	public ResponseEntity<List<ExpensesModel>> retreiveExpenseByUserId(UUID userId)
 			throws NO_USER_EXPENSES_FOUND_EXCEPTION {
-		List<ExpensesEntity> expenseEntities = expensesRepository.findByUserId(userId);
+		List<ExpenseEntity> expenseEntities = expensesRepository.findByUserId(userId);
 		List<ExpensesModel> expensesModels = new ArrayList<>();
-		for (ExpensesEntity expenses : expenseEntities)
+		for (ExpenseEntity expenses : expenseEntities)
 			expensesModels.add(ExpensesModel.expenseEntityToModel(expenses));
 
 		if (expenseEntities.size() == 0)
@@ -66,11 +65,11 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	@Override
-	public ResponseEntity<List<ExpensesModel>> tenLatestTransactions(Long userId)
+	public ResponseEntity<List<ExpensesModel>> tenLatestTransactions(UUID userId)
 			throws NO_USER_EXPENSES_FOUND_EXCEPTION {
-		List<ExpensesEntity> expenseEntities = expensesRepository.tenLatestTransactions(userId);
+		List<ExpenseEntity> expenseEntities = expensesRepository.tenLatestTransactions(userId);
 		List<ExpensesModel> expensesModels = new ArrayList<>();
-		for (ExpensesEntity expenses : expenseEntities)
+		for (ExpenseEntity expenses : expenseEntities)
 			expensesModels.add(ExpensesModel.expenseEntityToModel(expenses));
 		if (expenseEntities.size() == 0)
 			throw new NO_USER_EXPENSES_FOUND_EXCEPTION();
@@ -78,7 +77,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	@Override
-	public ResponseEntity<Integer> findTotalBasedOnExpenseType(Long userId, String expenseType) {
+	public ResponseEntity<Integer> findTotalBasedOnExpenseType(UUID userId, String expenseType) {
 		Integer totalExpensesTypeAmount = expensesRepository.expensesTotalBasedOnExpenseType(userId, expenseType);
 		if (totalExpensesTypeAmount == null)
 			return new ResponseEntity<Integer>(0, HttpStatus.OK);

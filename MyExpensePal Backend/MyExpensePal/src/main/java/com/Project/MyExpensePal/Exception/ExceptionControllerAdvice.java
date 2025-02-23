@@ -7,12 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
-	
-	@ExceptionHandler(USER_NOT_FOUND_EXCEPTION.class)
-	public ResponseEntity<String> userNotFound(USER_NOT_FOUND_EXCEPTION exception){
-		return new ResponseEntity<String>("The user Id you are searching is not in the database.", HttpStatus.NOT_FOUND);
-	}
-	
+
 	@ExceptionHandler(EXPENSE_ID_NOT_FOUND.class)
 	public ResponseEntity<String> expenseNotFound(EXPENSE_ID_NOT_FOUND exception){
 		return new ResponseEntity<String>("The expense Id you are searching is not in the database.", HttpStatus.NOT_FOUND);

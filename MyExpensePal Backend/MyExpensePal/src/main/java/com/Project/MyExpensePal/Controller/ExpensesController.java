@@ -1,6 +1,8 @@
 package com.Project.MyExpensePal.Controller;
 
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,7 +38,7 @@ public class ExpensesController {
 	}
 
 	@GetMapping("/expense/userId/{userId}")
-	public ResponseEntity<List<ExpensesModel>> getExpenseByUserId(@PathVariable("userId") Long userId)
+	public ResponseEntity<List<ExpensesModel>> getExpenseByUserId(@PathVariable("userId") UUID userId)
 			throws NO_USER_EXPENSES_FOUND_EXCEPTION {
 		return expenseService.retreiveExpenseByUserId(userId);
 	}
@@ -52,13 +54,13 @@ public class ExpensesController {
 	}
 
 	@GetMapping("/tenLatestTransactions/{userId}")
-	public ResponseEntity<List<ExpensesModel>> retrieveTenLatestTransactions(@PathVariable("userId") Long userId)
+	public ResponseEntity<List<ExpensesModel>> retrieveTenLatestTransactions(@PathVariable("userId") UUID userId)
 			throws NO_USER_EXPENSES_FOUND_EXCEPTION {
 		return expenseService.tenLatestTransactions(userId);
 	}
 
 	@GetMapping("/calculateTotalSumOfExpenseType/{userId}/{expenseType}")
-	public ResponseEntity<Integer> findTotalAmountBasedOnExpenseType(@PathVariable("userId") Long userId, @PathVariable("expenseType") String expenseType){
+	public ResponseEntity<Integer> findTotalAmountBasedOnExpenseType(@PathVariable("userId") UUID userId, @PathVariable("expenseType") String expenseType){
 		return expenseService.findTotalBasedOnExpenseType(userId, expenseType);
 	}
 }
