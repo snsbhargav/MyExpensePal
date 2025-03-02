@@ -17,9 +17,9 @@ public interface UserService {
 	
 	public ResponseEntity<String> validateUser(UserLoginDto loginDto);
 	
-	public ResponseEntity<Boolean> validateToken(String token);
+	public ResponseEntity<Boolean> validateToken(String token)  throws USER_NOT_FOUND_EXCEPTION;
 	
-	public UserDto findUserByEmail(String email);
+	public ResponseEntity<UserDto> findUserByEmail(String email)  throws USER_NOT_FOUND_EXCEPTION;
 	
 	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId) throws USER_NOT_FOUND_EXCEPTION;
 

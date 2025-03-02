@@ -10,7 +10,7 @@ public class ExceptionControllerAdvice {
 
 	@ExceptionHandler(USER_NOT_FOUND_EXCEPTION.class)
 	public ResponseEntity<String> expenseNotFound(USER_NOT_FOUND_EXCEPTION exception){
-		return new ResponseEntity<String>("The User Id you are searching is not in the database.", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<String>("The User you are searching is not in the database.", HttpStatus.NOT_FOUND);
 	}
 	
 }

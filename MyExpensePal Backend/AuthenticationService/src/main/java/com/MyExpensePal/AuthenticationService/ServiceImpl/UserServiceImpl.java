@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService{
 		return new ResponseEntity<String>("No User Found", HttpStatus.NOT_FOUND);
 	}
 
-	public ResponseEntity<Boolean> validateToken(String token) {
+	public ResponseEntity<Boolean> validateToken(String token) throws USER_NOT_FOUND_EXCEPTION {
 		Claims claims;
 		try {
 			claims = jwtService.getClaims(token);
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService{
 			return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
 		}
 		String email = jwtService.getSubject(claims);
-		UserDto user = findUserByEmail(email);
+		UserDto user = findUserByEmail(email).getBody();
 		
 		if (user != null && jwtService.isTokenValid(claims))
 			return new ResponseEntity<>(true, HttpStatus.OK);
@@ -61,16 +61,15 @@ public class UserServiceImpl implements UserService{
 			return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
 	}
 
-	public UserDto findUserByEmail(String email) {
+	public ResponseEntity<UserDto> findUserByEmail(String email) throws USER_NOT_FOUND_EXCEPTION {
 		UserEntity user = userRepository.findByEmail(email);
 		if (user == null)
-			return null;
-		return UserMapper.EntityToDto(user);
+			throw new USER_NOT_FOUND_EXCEPTION();
+		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(user), HttpStatus.CREATED);
 	}
 
 	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
 		
-		//TODO Implement a logic that deletes the expenses related to user.
 		if(userRepository.findById(userId).isEmpty())
 			throw new USER_NOT_FOUND_EXCEPTION();
 		userRepository.deleteById(userId);

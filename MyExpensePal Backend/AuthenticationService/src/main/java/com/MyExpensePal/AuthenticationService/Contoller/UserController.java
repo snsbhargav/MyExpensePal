@@ -1,6 +1,5 @@
 package com.MyExpensePal.AuthenticationService.Contoller;
 
-import java.net.http.HttpRequest;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ServerWebExchange;
 
 import com.MyExpensePal.AuthenticationService.Dto.UserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserLoginDto;
@@ -24,7 +21,7 @@ import com.MyExpensePal.AuthenticationService.Exception.USER_NOT_FOUND_EXCEPTION
 import com.MyExpensePal.AuthenticationService.Service.UserService;
 
 @RestController
-@RequestMapping("/auth/")
+@RequestMapping("/auth")
 public class UserController {
 
 	@Autowired
@@ -42,7 +39,7 @@ public class UserController {
 
 	@PostMapping("/validateToken")
 	public ResponseEntity<Boolean> validateToken(
-			@RequestHeader(value = "Authorization", required = false) String authHeader) {
+			@RequestHeader(value = "Authorization", required = false) String authHeader) throws USER_NOT_FOUND_EXCEPTION {
 		if (authHeader == null || !authHeader.startsWith("Bearer "))
 			return new ResponseEntity<Boolean>(false, HttpStatus.UNAUTHORIZED);
 
@@ -50,9 +47,14 @@ public class UserController {
 		return userService.validateToken(token);
 	}
 	
-	@DeleteMapping("removeUser/{userId}")
+	@DeleteMapping("/removeUser/{userId}")
 	public ResponseEntity<Boolean> removeUser(@PathVariable("userId") UUID userId) throws USER_NOT_FOUND_EXCEPTION {
 		return userService.deleteUserFromDatabase(userId);
+	}
+	
+	@GetMapping("/getUserByEmail/{email}")
+	public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) throws USER_NOT_FOUND_EXCEPTION{
+		return userService.findUserByEmail(email);
 	}
 	
 	//For testing
