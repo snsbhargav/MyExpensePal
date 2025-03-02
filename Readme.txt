@@ -1,5 +1,5 @@
 EXPENSES TRACKER.
-
+Hello
 1. User can login and create an account (Manadatory)
 3. User can build their profile (picture, name, DOB, Bio, Address, email, Phone)
 2. User can add expenses (expense name, amount, datetime(auto/manual), credit/debit, add reciepts(optional))
