@@ -139,7 +139,28 @@ Flow:
 			Need help:
 				Displays the content in the landing page but without login or signup buttons.
 				
+			Testing Fonts:
+			
+			Whitish template	
+				#fdfcff - left column
+				#242bc8 - blue
+				#ffffff - Content background
+				#fdfdfd - right background
+				#b5b7bb - faded font
+				#0b0605 - bold font
 				
+				
+			Black Template
+			
+				#1b1b1b - left menu background
+				#0b0b0b - center menu background
+				#d3f3ef - Font color for menu
+				#f3f3f3 - For headings
+				#959595 - For faded font
+				#a370f9 - Icon colors
+				#f5f5f5 - for numbers
+				
+			Font: Poppins
 				
 				
 			
