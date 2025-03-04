@@ -1,0 +1,152 @@
+Flow:
+	
+	I. Landing Page
+		
+		1. Header
+		2. Login - Separate screen
+			 -Username
+			 -Password
+			 -Button
+		3. Signup - Sepearte Screen
+			 -First Name
+			 -Last Name
+			 -Email (No duplicates allowed)
+			 -Phone
+			 -Gender(M/F)
+			 -DOB
+			 -Password (check password strength)
+			 -Confirm Password
+			 -Submit Button
+			 
+		4. Content about app: TODO
+			 -pictures as background
+		5. Footer
+		
+	II. Page 2
+	
+		Header Navbar :
+			-Need Help --link
+			-Profile Picture --goes to view profile when clicked
+			-Log out button
+			
+		Left side navbar:
+			-Logo and Name
+			-Menu
+				1. Dashboard
+				2. Log an Expense
+				3. My Expenses
+				4. Statistics
+				5. Chat with AI
+				6. Settings
+				7. About Us
+		 Footer
+		 
+		i) Dashboard: 
+			-Center top: Top 3 categories spends for present month (Food, Entertaiment, others)
+			-Center bottom: Weekly spent graphs (or monthly or daily) based on categories -> On click on graphs it redirects to Statistics page.
+			-Right: Top ten or less latest transactions (Logo Name date time below name, price to the right) --- On clicking on the expense it shows all details about expense
+			-May be (A Add expense shortcut button)
+			
+		ii) Log an expense:
+			-Expense Name
+			-Expense
+			-location
+			-expense type (drop down - food/entertaiment/others)
+			-date (if not selected dont fill automatically backend fills it)
+			-time (if not selected dont fill automatically backend fills it)
+			-Submit button
+			---->If submission failed pops up a notification.
+			
+		iii) My Expense:
+			 -Top right corner
+				--filter button(try to add date range), Sort by (at the header of each field), download button, send to email button
+			 --List of Expense --- On clicking on the expense it shows all details about expense
+				- Expense Id
+				- Expense Name
+				- Location
+				- Date
+				- Time
+				- Expense Type
+				- Expense
+				-Update Button
+				-Delete button (Deletion  confiramtion notification)
+			page by page 10-20 items per page
+			
+		iv) Statistics:
+			-Top: Monthly Insights or summary paragraph
+			-below 2 section side-by-side (graph and pie charts, weekly, monthly, daily)
+			--In future (Download or send email of overal monthly report with summary transactions, graphs)
+		v) Chat with AI:
+			-A regular chat bot UI which shows past interactions.
+			-When it a CRUD operation it should pops ups a confiramtion notification about the action that gonna happen with deatils.
+			
+		vi) Settings:
+			 -Set/Update the Income.
+			 -Set Currency
+			 -Email Notifiacation Preference
+			 -Transaction notification preference
+			 -Delete Account --Take confirmation by asking to enter password
+			 -Reset my account --Take confirmation by asking to enter password
+			 
+		v) About Us:
+			-Deatils of the App Creators
+			 
+			 
+			 
+		Other Screens:
+		
+			Expense Screen:
+				Expense Category Logo
+				Expense Id
+				Expense Name
+				Expense 
+				Expense Type
+				Location
+				Date
+				Time
+				Last Modified
+				Created On
+				-Update Button
+				-Delete Button
+				-Download Expense
+				-Send to Mail
+				
+			Update Expense:
+				-Expense Name
+				-Expense 
+				-Expense Type
+				-Location
+				-Date
+				-Time
+				-->Feilds should be auto populated first. User no need to update all field
+				-->If update fails should gives notification as update failed.(if possible should say what the user did wrong)
+				
+			Profile Screen:
+				Profile Picture
+				user Id(only to read)
+				First Name
+				Last Name
+				DOB
+				Gender
+				Email (Email should be unique)
+				Phone (Phone should be unique)
+				bio
+				Reset Password
+					-Last Password
+					-New Password
+				
+					
+			Need help:
+				Displays the content in the landing page but without login or signup buttons.
+				
+				
+				
+				
+			
+			
+			
+			
+			
+		
+		
+		
