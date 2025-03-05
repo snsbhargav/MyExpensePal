@@ -32,12 +32,12 @@ public class ExpensesController {
 		return expenseService.saveExpenseToDatabase(expensesModel);
 	}
 
-	@GetMapping("/expense/expenseId/{expenseId}")
+	@GetMapping("/expenseId/{expenseId}")
 	public ResponseEntity<ExpensesModel> getExpenseByExpenseId(@PathVariable("expenseId") UUID expenseId) {
 		return expenseService.retreiveExpenseByExpenseId(expenseId);
 	}
 
-	@GetMapping("/expense/userId/{userId}")
+	@GetMapping("/userId/{userId}")
 	public ResponseEntity<List<ExpensesModel>> getExpenseByUserId(@PathVariable("userId") UUID userId)
 			throws NO_USER_EXPENSES_FOUND_EXCEPTION {
 		return expenseService.retreiveExpenseByUserId(userId);

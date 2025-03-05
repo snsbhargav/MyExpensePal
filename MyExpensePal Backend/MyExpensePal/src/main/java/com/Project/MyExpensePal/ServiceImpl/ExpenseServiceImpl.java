@@ -54,7 +54,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	public ResponseEntity<String> updateExpense(ExpensesModel expensesModel) {
-		// TODO Auto-generated method stub
 		expensesRepository.save(ExpensesModel.expenseModelToEntity(expensesModel));
 		return new ResponseEntity<String>("Update successful", HttpStatus.OK);
 	}

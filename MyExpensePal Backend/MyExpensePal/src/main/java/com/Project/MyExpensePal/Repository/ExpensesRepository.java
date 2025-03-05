@@ -13,12 +13,12 @@ import com.Project.MyExpensePal.Entity.ExpenseEntity;
 @Repository
 public interface ExpensesRepository extends JpaRepository<ExpenseEntity, UUID> {
 
-	@Query(nativeQuery = true, value = "SELECT * FROM EXPENSES_ENTITY WHERE USER_ID=?")
+	@Query(nativeQuery = true, value = "SELECT * FROM EXPENSE_ENTITY WHERE USER_ID=?")
 	List<ExpenseEntity> findByUserId(UUID userId);
 	
-	@Query(nativeQuery = true, value = "SELECT * FROM expenses_tracker_app.expenses_entity where user_id=? ORDER BY date desc, time desc LIMIT 10;")
+	@Query(nativeQuery = true, value = "SELECT * FROM my_expense_pal.expense_entity where user_id=? ORDER BY date desc, time desc LIMIT 10;")
 	List<ExpenseEntity> tenLatestTransactions(UUID userId);
 	
-	@Query(nativeQuery = true, value = "select sum(expense) from expenses_tracker_app.expenses_entity where user_id=? and expense_type=?;")	
+	@Query(nativeQuery = true, value = "select sum(expense) from my_expense_pal.expense_entity where user_id=? and expense_type=?;")	
 	Integer expensesTotalBasedOnExpenseType(UUID userId, String expenseType);
 }
