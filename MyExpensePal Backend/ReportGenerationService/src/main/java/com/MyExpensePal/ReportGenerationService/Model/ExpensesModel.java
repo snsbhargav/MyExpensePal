@@ -10,7 +10,7 @@ public class ExpensesModel {
 		// TODO Auto-generated constructor stub
 	}
 	
-	private Long expenseId;
+	private UUID expenseId;
 	private UUID userId;
 	private String expenseName;
 	private Integer expense;
@@ -19,7 +19,7 @@ public class ExpensesModel {
 	private Date date;
 	private Date time;
 	
-	public ExpensesModel(Long expenseId, UUID userId, String expenseName, Integer expense, ExpenseType expenseType,
+	public ExpensesModel(UUID expenseId, UUID userId, String expenseName, Integer expense, ExpenseType expenseType,
 			String location, Date date, Date time) {
 		super();
 		this.expenseId = expenseId;
@@ -32,11 +32,11 @@ public class ExpensesModel {
 		this.time = time;
 	}
 
-	public Long getExpenseId() {
+	public UUID getExpenseId() {
 		return expenseId;
 	}
 
-	public void setExpenseId(Long expenseId) {
+	public void setExpenseId(UUID expenseId) {
 		this.expenseId = expenseId;
 	}
 

@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.client.RestTemplate;
 
 import com.MyExpensePal.ReportGenerationService.Model.ExpenseType;
 import com.MyExpensePal.ReportGenerationService.Model.ExpensesModel;
@@ -25,22 +28,31 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Component
 public class ReportGenerationServiceImpl implements ReportGenerationService{
+	
+	@Autowired
+	RestTemplate restTemplate;
 
 	@Override
-	public String exportReport(String reportFormat) throws FileNotFoundException, JRException {
+	public String exportReport(UUID userId) throws FileNotFoundException, JRException {
 		
-		List<ExpensesModel> expenseList = new ArrayList<>();
-		expenseList.add(new ExpensesModel(1L,new UUID(0, 0), "pizza", 20, ExpenseType.FOOD,"Bridgeport, RockyHill", new Date(), new Date()));
-		expenseList.add(new ExpensesModel(2L,new UUID(0, 0), "pizza", 20, ExpenseType.FOOD,"Bridgeport, RockyHill", new Date(), new Date()));
+//		List<ExpensesModel> expenseList = new ArrayList<>();
+		List<ExpensesModel> expenseList = retrieveExpenseList(userId);
+//		expenseList.add(new ExpensesModel(1L,new UUID(0, 0), "pizza", 20, ExpenseType.FOOD,"Bridgeport, RockyHill", new Date(), new Date()));
+//		expenseList.add(new ExpensesModel(2L,new UUID(0, 0), "pizza", 20, ExpenseType.FOOD,"Bridgeport, RockyHill", new Date(), new Date()));
 		File file = ResourceUtils.getFile("classpath:ExpenseReport.jrxml");
 		JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
 		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(expenseList);
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("Created By", "Bhargav");
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-
-		JasperExportManager.exportReportToPdfFile(jasperPrint, "C:\\Users\\snsbh\\Bhargav\\UB\\Sem 4\\MS Project\\MyExpensePal Application\\MyExpensePal Backend\\ReportGenerationService\\src\\main\\resources\\"+"ExpenseReport.pdf");
+		
+		JasperExportManager.exportReportToPdfFile(jasperPrint, "src\\main\\resources\\ExpenseReport.pdf");
 		return "report generated.";
+	}
+	
+	private List<ExpensesModel> retrieveExpenseList(UUID userId){
+		String api = "lb://MY-EXPENSE-PAL/expense/userId/"+userId;
+		return restTemplate.getForEntity(api, List.class).getBody();
 	}
 
 }
