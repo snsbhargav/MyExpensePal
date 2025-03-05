@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +21,7 @@ public class ReportGeneratorController {
 	ReportGenerationService generationService;
 	
 	@GetMapping("/generateReport/{userId}")
-	public String generateReport(@PathVariable UUID userId) throws FileNotFoundException, JRException {
+	public ResponseEntity<Resource> generateReport(@PathVariable UUID userId) throws FileNotFoundException, JRException {
 		return generationService.exportReport(userId);
 	}
 
