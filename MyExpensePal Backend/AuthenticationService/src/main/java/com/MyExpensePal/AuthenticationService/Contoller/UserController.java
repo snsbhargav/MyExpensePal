@@ -57,6 +57,11 @@ public class UserController {
 		return userService.findUserByEmail(email);
 	}
 	
+	@GetMapping("/getUserById/{userId}")
+	public ResponseEntity<UserDto> getUSerById(@PathVariable UUID userId) throws USER_NOT_FOUND_EXCEPTION{
+		return userService.finUserById(userId);
+	}
+	
 	//For testing
 	@GetMapping("test")
 	public String test() {

@@ -76,4 +76,9 @@ public class UserServiceImpl implements UserService{
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<UserDto> finUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
+		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new USER_NOT_FOUND_EXCEPTION());
+		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(user), HttpStatus.CREATED);	}
+
 }
