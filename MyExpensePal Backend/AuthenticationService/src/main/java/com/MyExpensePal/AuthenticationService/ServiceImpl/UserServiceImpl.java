@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.MyExpensePal.AuthenticationService.Dto.UserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserLoginDto;
@@ -30,12 +29,14 @@ public class UserServiceImpl implements UserService{
 
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
+	@Override
 	public ResponseEntity<UserDto> registerUser(UserEntity user) {
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return new ResponseEntity<>(UserMapper.EntityToDto(userRepository.save(user)), HttpStatus.CREATED);
 	}
 
+	@Override
 	public ResponseEntity<String> validateUser(UserLoginDto loginDto) {
 		UserEntity user = userRepository.findByEmail(loginDto.getEmail());
 
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService{
 		return new ResponseEntity<String>("No User Found", HttpStatus.NOT_FOUND);
 	}
 
+	@Override
 	public ResponseEntity<Boolean> validateToken(String token) throws USER_NOT_FOUND_EXCEPTION {
 		Claims claims;
 		try {
@@ -61,6 +63,7 @@ public class UserServiceImpl implements UserService{
 			return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
 	}
 
+	@Override
 	public ResponseEntity<UserDto> findUserByEmail(String email) throws USER_NOT_FOUND_EXCEPTION {
 		UserEntity user = userRepository.findByEmail(email);
 		if (user == null)
@@ -68,6 +71,7 @@ public class UserServiceImpl implements UserService{
 		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(user), HttpStatus.CREATED);
 	}
 
+	@Override
 	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
 		
 		if(userRepository.findById(userId).isEmpty())
@@ -80,5 +84,12 @@ public class UserServiceImpl implements UserService{
 	public ResponseEntity<UserDto> finUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
 		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new USER_NOT_FOUND_EXCEPTION());
 		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(user), HttpStatus.CREATED);	}
+
+	@Override
+	public ResponseEntity<Boolean> isUserExistsInDatabase(UUID userId) {
+		if(userRepository.findById(userId).isEmpty())
+			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
 
 }

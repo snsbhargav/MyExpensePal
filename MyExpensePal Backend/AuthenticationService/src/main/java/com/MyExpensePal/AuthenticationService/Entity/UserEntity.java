@@ -3,6 +3,7 @@ package com.MyExpensePal.AuthenticationService.Entity;
 import java.sql.Date;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,9 +24,13 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID userId;
+	@Column(nullable = false)
 	private String firstName;
+	@Column(nullable = false)
 	private String lastName;
+	@Column(nullable = false, unique = true)
 	private String email; // Used as username
+	@Column(nullable = false)
 	private String password;
 	private String gender;
 	private Date dateOfBirth;
