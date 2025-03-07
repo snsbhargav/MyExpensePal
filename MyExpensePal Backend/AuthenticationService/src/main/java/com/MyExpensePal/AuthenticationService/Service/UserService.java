@@ -25,4 +25,6 @@ public interface UserService {
 
 	public ResponseEntity<UserDto> finUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION;
 
+	public ResponseEntity<Boolean> isUserExistsInDatabase(UUID userId);
+
 }

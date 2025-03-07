@@ -20,6 +20,8 @@ import com.MyExpensePal.AuthenticationService.Entity.UserEntity;
 import com.MyExpensePal.AuthenticationService.Exception.USER_NOT_FOUND_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Service.UserService;
 
+import lombok.experimental.PackagePrivate;
+
 @RestController
 @RequestMapping("/auth")
 public class UserController {
@@ -60,6 +62,11 @@ public class UserController {
 	@GetMapping("/getUserById/{userId}")
 	public ResponseEntity<UserDto> getUSerById(@PathVariable UUID userId) throws USER_NOT_FOUND_EXCEPTION{
 		return userService.finUserById(userId);
+	}
+	
+	@GetMapping("isUserInDatabase/{userId}")
+	public ResponseEntity<Boolean> isUserExistsInDatabase(@PathVariable UUID userId){
+		return userService.isUserExistsInDatabase(userId);
 	}
 	
 	//For testing
