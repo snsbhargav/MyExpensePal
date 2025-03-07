@@ -7,25 +7,25 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.Project.MyExpensePal.Entity.ExpenseEntity;
 import com.Project.MyExpensePal.Exception.NO_USER_EXPENSES_FOUND_EXCEPTION;
-import com.Project.MyExpensePal.Model.ExpensesModel;
 
 
 
 @Service
 public interface ExpenseService {
 
-	public ResponseEntity<String> saveExpenseToDatabase(ExpensesModel expensesModel);
+	public ResponseEntity<String> saveExpenseToDatabase(ExpenseEntity expensesModel);
 
-	public ResponseEntity<ExpensesModel> retreiveExpenseByExpenseId(UUID expenseId);
+	public ResponseEntity<ExpenseEntity> retreiveExpenseByExpenseId(UUID expenseId);
 
-	public ResponseEntity<List<ExpensesModel>> retreiveExpenseByUserId(UUID userId) throws NO_USER_EXPENSES_FOUND_EXCEPTION;
+	public ResponseEntity<List<ExpenseEntity>> retreiveExpenseByUserId(UUID userId) throws NO_USER_EXPENSES_FOUND_EXCEPTION;
 
-	public ResponseEntity<String> updateExpense(ExpensesModel expensesModel);
+	public ResponseEntity<String> updateExpense(UUID expenseId, ExpenseEntity expensesModel);
 
 	public ResponseEntity<String> deleteExpense(UUID expenseId);
 
-	public ResponseEntity<List<ExpensesModel>> tenLatestTransactions(UUID userId) throws NO_USER_EXPENSES_FOUND_EXCEPTION;
+	public ResponseEntity<List<ExpenseEntity>> tenLatestTransactions(UUID userId) throws NO_USER_EXPENSES_FOUND_EXCEPTION;
 
 	public ResponseEntity<Integer> findTotalBasedOnExpenseType(UUID userId, String expenseType);
 }
