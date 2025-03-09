@@ -41,26 +41,26 @@ public class UserServiceImpl implements UserService{
 		UserEntity user = userRepository.findByEmail(loginDto.getEmail());
 
 		if (user != null && passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-			return new ResponseEntity<String>(jwtService.generateToken(loginDto.getEmail()), HttpStatus.OK);
+			return new ResponseEntity<String>(jwtService.generateToken(user.getUserId()), HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("No User Found", HttpStatus.NOT_FOUND);
 	}
 
 	@Override
-	public ResponseEntity<Boolean> validateToken(String token) throws USER_NOT_FOUND_EXCEPTION {
+	public ResponseEntity<UUID> validateToken(String token) throws USER_NOT_FOUND_EXCEPTION {
 		Claims claims;
 		try {
 			claims = jwtService.getClaims(token);
 		} catch (Exception e) {
-			return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 		}
-		String email = jwtService.getSubject(claims);
-		UserDto user = findUserByEmail(email).getBody();
+		UUID userId = jwtService.getSubject(claims);
+		UserDto user = findUserById(userId).getBody();
 		
 		if (user != null && jwtService.isTokenValid(claims))
-			return new ResponseEntity<>(true, HttpStatus.OK);
+			return new ResponseEntity<UUID>(userId, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public ResponseEntity<UserDto> finUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
+	public ResponseEntity<UserDto> findUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
 		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new USER_NOT_FOUND_EXCEPTION());
 		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(user), HttpStatus.CREATED);	}
 
