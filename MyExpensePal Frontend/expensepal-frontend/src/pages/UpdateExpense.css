@@ -1,0 +1,79 @@
+/* #sec222{
+    width:250%;
+    padding: 20px;
+    overflow-x: auto;
+    box-sizing: border-box;
+    background-color: #5a95ff;
+    
+} */
+.updateExpenseContainer {
+    padding: 20px;
+    /* background-color: #c48989; */
+    margin: 20px auto; 
+    width: 293%;
+    max-width: 800%;
+    border-radius: 8px;
+    /* overflow: hidden; */
+}
+.updateExpenseContainer h2 {
+    font-size: 24px;
+    font-weight: bold;
+    /* color: #333; */
+    margin-bottom: 20px;
+}
+.updateExpenseForm{
+    display: flex;
+    flex-direction: column;
+    /* background-color: #5a95ff; */
+    align-items: flex-start;
+    width: 100%;
+}
+.updateExpenseForm .formRow{
+    display: flex;
+    justify-content: space-between;
+    /* background-color: aqua; */
+    margin-bottom: 12px;
+    width: 100%;
+}
+.updateExpenseForm label{
+    padding-top: 8px;
+    margin-right: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    width: 20%;
+    /* background-color: red; */
+}
+.updateExpenseForm input[type="text"],
+.updateExpenseForm input[type="number"],
+.updateExpenseForm input[type="date"],
+.updateExpenseForm input[type="time"],
+.updateExpenseForm select {
+    padding: 10px 10px 10px 0px;
+    font-size: 14px;
+    /* margin-left: 10px; */
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #555;
+    color: #fff;
+    width:79%;
+    box-sizing: border-box;
+}
+.updateExpenseForm select {
+    appearance: none;
+
+}
+.updateExpenseForm button {
+    padding: 12px 20px;
+    background-color: #5a95ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 20px;
+    align-self: center;
+}
+
+.updateExpenseForm button:hover {
+    opacity: 0.8;
+}
