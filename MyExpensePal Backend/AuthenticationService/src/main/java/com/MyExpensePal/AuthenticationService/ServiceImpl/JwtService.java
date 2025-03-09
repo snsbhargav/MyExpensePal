@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -24,9 +25,9 @@ public class JwtService {
 	@Value("${jwt.expiration}")
 	private int expiration;
 
-	public String generateToken(String email) {
+	public String generateToken(UUID userId) {
 		Map<String, Object> claims = new HashMap<>();
-		return Jwts.builder().claims(claims).subject(email).issuedAt(new Date(System.currentTimeMillis()))
+		return Jwts.builder().claims(claims).subject(userId.toString()).issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + expiration)).signWith(getKey()).compact();
 	}
 
@@ -40,8 +41,8 @@ public class JwtService {
 		return claims;
 	}
 
-	public String getSubject(Claims claims) {
-		return claims.getSubject();
+	public UUID getSubject(Claims claims) {
+		return UUID.fromString(claims.getSubject());
 	}
 
 	public boolean isTokenValid(Claims claims) {

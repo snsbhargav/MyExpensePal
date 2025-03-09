@@ -40,10 +40,10 @@ public class UserController {
 	}
 
 	@PostMapping("/validateToken")
-	public ResponseEntity<Boolean> validateToken(
-			@RequestHeader(value = "Authorization", required = false) String authHeader) throws USER_NOT_FOUND_EXCEPTION {
+	public ResponseEntity<UUID> validateToken(
+			@RequestHeader(value = "Authorization") String authHeader) throws USER_NOT_FOUND_EXCEPTION {
 		if (authHeader == null || !authHeader.startsWith("Bearer "))
-			return new ResponseEntity<Boolean>(false, HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 
 		String token = authHeader.substring(7);
 		return userService.validateToken(token);
@@ -61,7 +61,7 @@ public class UserController {
 	
 	@GetMapping("/getUserById/{userId}")
 	public ResponseEntity<UserDto> getUSerById(@PathVariable UUID userId) throws USER_NOT_FOUND_EXCEPTION{
-		return userService.finUserById(userId);
+		return userService.findUserById(userId);
 	}
 	
 	@GetMapping("isUserInDatabase/{userId}")

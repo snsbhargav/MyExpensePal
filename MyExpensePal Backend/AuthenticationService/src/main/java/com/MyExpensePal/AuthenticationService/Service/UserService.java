@@ -17,13 +17,13 @@ public interface UserService {
 	
 	public ResponseEntity<String> validateUser(UserLoginDto loginDto);
 	
-	public ResponseEntity<Boolean> validateToken(String token)  throws USER_NOT_FOUND_EXCEPTION;
+	public ResponseEntity<UUID> validateToken(String token)  throws USER_NOT_FOUND_EXCEPTION;
 	
 	public ResponseEntity<UserDto> findUserByEmail(String email)  throws USER_NOT_FOUND_EXCEPTION;
 	
 	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId) throws USER_NOT_FOUND_EXCEPTION;
 
-	public ResponseEntity<UserDto> finUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION;
+	public ResponseEntity<UserDto> findUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION;
 
 	public ResponseEntity<Boolean> isUserExistsInDatabase(UUID userId);
 
