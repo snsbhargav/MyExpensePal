@@ -26,4 +26,5 @@ Thumbs.db
 .env
 *.key
 *.pem
- 
+
+node_modules/
