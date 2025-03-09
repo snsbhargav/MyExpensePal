@@ -1,0 +1,72 @@
+/* AddExpense.module.css */
+.expensehtmlForm {
+    /* margin: 20px auto; */
+    /* background-color: aqua; */
+    padding: 20px;
+    color: #fff;
+
+    flex-direction: column;
+    width: 500%;
+    border-radius: 5px;
+}
+
+.expensehtmlForm h2 {
+    /* color: #ddd; */
+    margin-bottom: 20px;
+}
+
+hr {
+    border: 1px solid #5a95ff;
+    margin-bottom: 15px;
+}
+
+.htmlFormGroup {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.expensehtmlForm label {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.expensehtmlForm input[type="text"],
+.expensehtmlForm input[type="number"],
+.expensehtmlForm input[type="date"],
+.expensehtmlForm input[type="time"],
+.expensehtmlForm select {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    background-color: #555;
+    color: #fff;
+    width: 50%;
+    margin-bottom: 5px;
+}
+
+.expensehtmlForm select {
+    cursor: pointer;
+}
+
+.buttonGroup input[type="submit"] {
+    padding: 12px 20px;
+    background-color: #5a95ff;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.buttonGroup input[type="submit"]:hover {
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+/* @media (max-width: 768px) {
+    .expensehtmlForm {
+        width: 90%;
+    }
+} */
