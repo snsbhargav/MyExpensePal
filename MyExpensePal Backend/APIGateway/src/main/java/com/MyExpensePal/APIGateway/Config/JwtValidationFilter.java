@@ -2,6 +2,7 @@ package com.MyExpensePal.APIGateway.Config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
+import jakarta.ws.rs.core.SecurityContext;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -33,7 +35,6 @@ public class JwtValidationFilter implements WebFilter {
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 		// TODO Auto-generated method stub
 		String token = exchange.getRequest().getHeaders().getFirst("Authorization");
-		ResponseEntity<Boolean> isTokenValid = new ResponseEntity<Boolean>(false, HttpStatus.UNAUTHORIZED);
 		
 		//Leaving Authentication service API's open
 		if (exchange.getRequest().getURI().getPath().startsWith("/auth/")) {
@@ -48,18 +49,24 @@ public class JwtValidationFilter implements WebFilter {
 		
 		//Slicing out the token
 		token = token.substring(7);
+		final UUID userId;
 		try {
-			isTokenValid = restTemplate.postForEntity("lb://AUTHENTICATION-SERVICE/auth/validateToken",
-					httpEntity, Boolean.class);
+			userId = restTemplate.postForEntity("lb://AUTHENTICATION-SERVICE/auth/validateToken",
+					httpEntity, UUID.class).getBody();
 
-			if (!isTokenValid.getBody()) {
+			if (userId == null) {
 				return createUnauthorizedException(exchange, "Invalid Token");
-			} else
-				return chain.filter(exchange);
+			} else {
+				System.out.println("Header before adding user Id : "+exchange.getRequest().getHeaders());
+				ServerWebExchange modifiedExchange = exchange.mutate().request(request -> request.header("userId", userId.toString())).build();
+				
+				return chain.filter(modifiedExchange);
+			}
 			
 		} catch (HttpClientErrorException.Unauthorized e) {
 			return createUnauthorizedException(exchange, "Invalid Token");
 		} catch (Exception e) {
+			System.out.println(e);
 			return createUnauthorizedException(exchange, "Authentication Service Unavailable.");
 		}
 
