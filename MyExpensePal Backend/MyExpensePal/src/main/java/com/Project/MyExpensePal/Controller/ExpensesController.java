@@ -1,6 +1,7 @@
 package com.Project.MyExpensePal.Controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 
 import com.Project.MyExpensePal.Entity.ExpenseEntity;
 import com.Project.MyExpensePal.Exception.NO_USER_EXPENSES_FOUND_EXCEPTION;
@@ -37,10 +40,11 @@ public class ExpensesController {
 		return expenseService.retreiveExpenseByExpenseId(expenseId);
 	}
 
-	@GetMapping("/userId/{userId}")
-	public ResponseEntity<List<ExpenseEntity>> getExpenseByUserId(@PathVariable("userId") UUID userId)
+	
+	@GetMapping("/userId")
+	public ResponseEntity<List<ExpenseEntity>> getExpenseByUserId(@RequestHeader("userId") String userId)
 			throws NO_USER_EXPENSES_FOUND_EXCEPTION {
-		return expenseService.retreiveExpenseByUserId(userId);
+		return expenseService.retreiveExpenseByUserId(UUID.fromString(userId));
 	}
 
 	@PutMapping("/updateExpense/{expenseId}")
@@ -54,14 +58,14 @@ public class ExpensesController {
 		return expenseService.deleteExpense(expenseId);
 	}
 
-	@GetMapping("/tenLatestTransactions/{userId}")
-	public ResponseEntity<List<ExpenseEntity>> retrieveTenLatestTransactions(@PathVariable("userId") UUID userId)
+	@GetMapping("/tenLatestTransactions")
+	public ResponseEntity<List<ExpenseEntity>> retrieveTenLatestTransactions(@RequestHeader("userId") UUID userId)
 			throws NO_USER_EXPENSES_FOUND_EXCEPTION {
 		return expenseService.tenLatestTransactions(userId);
 	}
 
-	@GetMapping("/calculateTotalSumOfExpenseType/{userId}/{expenseType}")
-	public ResponseEntity<Integer> findTotalAmountBasedOnExpenseType(@PathVariable("userId") UUID userId,
+	@GetMapping("/calculateTotalSumOfExpenseType/{expenseType}")
+	public ResponseEntity<Integer> findTotalAmountBasedOnExpenseType(@RequestHeader("userId") UUID userId,
 			@PathVariable("expenseType") String expenseType) {
 		return expenseService.findTotalBasedOnExpenseType(userId, expenseType);
 	}
