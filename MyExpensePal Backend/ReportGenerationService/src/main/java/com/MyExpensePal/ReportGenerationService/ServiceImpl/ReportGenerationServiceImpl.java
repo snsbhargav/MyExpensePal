@@ -10,7 +10,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -50,8 +52,12 @@ public class ReportGenerationServiceImpl implements ReportGenerationService {
 	}
 
 	private List<ExpensesModel> retrieveExpenseList(UUID userId) {
-		String api = "lb://MY-EXPENSE-PAL/expense/userId/" + userId;
-		return restTemplate.getForEntity(api, List.class).getBody();
+		//Passing UserId in header to Expense Service.
+		String api = "lb://MY-EXPENSE-PAL/expense/userId";
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("userId", userId.toString());
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		return restTemplate.exchange(api, HttpMethod.GET, entity, List.class).getBody();
 	}
 
 	private ResponseEntity<Resource> generatedFile(byte[] file) {
