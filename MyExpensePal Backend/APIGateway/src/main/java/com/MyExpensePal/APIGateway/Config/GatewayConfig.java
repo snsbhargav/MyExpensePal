@@ -26,6 +26,10 @@ public class GatewayConfig {
 				.route("Authentication-Service", r->r.path("/auth/**")
 //						.filters(f->f.filter(new JwtValidationFilter()))
 						.uri("lb://AUTHENTICATION-SERVICE"))
+				.route("Report-Generation-Service", r->r.path("/report/**")
+						.uri("lb://REPORT-GENERATION-SERVICE"))
+				.route("Mailing-Service", r->r.path("/mail/**")
+						.uri("lb://MAILING-SERVICE"))
 				.build();
 	}
 
