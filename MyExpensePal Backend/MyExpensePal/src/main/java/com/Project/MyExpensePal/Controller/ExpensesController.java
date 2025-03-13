@@ -23,7 +23,6 @@ import com.Project.MyExpensePal.Exception.NO_USER_EXPENSES_FOUND_EXCEPTION;
 import com.Project.MyExpensePal.Service.ExpenseService;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/expense/")
 public class ExpensesController {
 
