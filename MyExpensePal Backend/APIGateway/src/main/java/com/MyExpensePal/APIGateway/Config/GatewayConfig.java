@@ -2,6 +2,7 @@ package com.MyExpensePal.APIGateway.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.gateway.config.GlobalCorsProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class GatewayConfig {
-	
-//	final private JwtValidationFilter jwtValidationFilter;
-//	
-//	public GatewayConfig(JwtValidationFilter jwtValidationFilter) {
-//		this.jwtValidationFilter = jwtValidationFilter;
-//	}
 
 	@Bean
 	RouteLocator routeLocator(RouteLocatorBuilder builder) {
@@ -32,6 +27,7 @@ public class GatewayConfig {
 						.uri("lb://MAILING-SERVICE"))
 				.build();
 	}
+	
 
 //	@Bean
 //	@LoadBalanced
