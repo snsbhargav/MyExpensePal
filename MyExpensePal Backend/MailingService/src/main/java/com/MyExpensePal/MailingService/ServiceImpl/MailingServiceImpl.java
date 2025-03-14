@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -31,16 +34,20 @@ public class MailingServiceImpl implements MailingService {
 	private String fromEmail;
 
 	@Override
-	public String generateAndSendFullReport(String toEmail) throws MessagingException {
+	public String generateAndSendFullReport(UUID userId) throws MessagingException {
+		//Creating an entity with userId in it.
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("userId", userId.toString());
+		HttpEntity<String> entity = new HttpEntity<>(headers);
 		
-		UserDto user = getUserByUserEmail(toEmail);
-		Resource generatedReport = generateExpenseReport(user.getUserId());
+		UserDto user = getUser(entity);
+		Resource generatedReport = generateExpenseReport(entity);
 
-		return createAMalingObject(user, toEmail, generatedReport);
+		return createAMalingObject(user, generatedReport);
 
 	}
-	
-	private String createAMalingObject(UserDto user, String toEmail, Resource generatedReport) throws MessagingException {
+
+	private String createAMalingObject(UserDto user, Resource generatedReport) throws MessagingException {
 		String subject = "Expense Report - PDF Attached";
 		String body = """
 				Dear %s %s,
@@ -52,26 +59,26 @@ public class MailingServiceImpl implements MailingService {
 				""".formatted(user.getFirstName(), user.getLastName());
 
 		MimeMessage message = javaMailSender.createMimeMessage();
-		
+
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 		helper.setFrom(fromEmail);
-		helper.setTo(toEmail);
+		helper.setTo(user.getEmail());
 		helper.setText(body);
 		helper.setSubject(subject);
 		helper.addAttachment(generatedReport.getFilename(), generatedReport);
-		
+
 		javaMailSender.send(message);
 
-		
 		return "Sent Successfully";
 	}
 
-	private Resource generateExpenseReport(UUID userId) {
-		return restTemplate.getForObject("lb://REPORT-GENERATION-SERVICE/generateReport/" + userId, Resource.class);
+	private Resource generateExpenseReport(HttpEntity<String> entity) {
+		return restTemplate.exchange("lb://REPORT-GENERATION-SERVICE/report/generateReport", HttpMethod.GET, entity,
+				Resource.class).getBody();
 	}
 
-	private UserDto getUserByUserEmail(String email) {
-		return restTemplate.getForEntity("lb://AUTHENTICATION-SERVICE/auth/getUserByEmail/" + email, UserDto.class)
+	private UserDto getUser(HttpEntity<String> entity) {
+		return restTemplate.exchange("lb://AUTHENTICATION-SERVICE/auth/getUser", HttpMethod.GET, entity, UserDto.class)
 				.getBody();
 	}
 

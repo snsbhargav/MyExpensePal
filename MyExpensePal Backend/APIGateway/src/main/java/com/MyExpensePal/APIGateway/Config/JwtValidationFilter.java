@@ -35,34 +35,36 @@ public class JwtValidationFilter implements WebFilter {
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 		// TODO Auto-generated method stub
 		String token = exchange.getRequest().getHeaders().getFirst("Authorization");
-		
-		//Leaving Authentication service API's open
-		if (exchange.getRequest().getURI().getPath().startsWith("/auth/")) {
+
+		// Leaving Authentication service API's open
+		String path = exchange.getRequest().getURI().getPath();
+		if (path.startsWith("/auth/login") || path.startsWith("/auth/register")
+				|| exchange.getRequest().getMethod().matches("OPTIONS")) {
 			return chain.filter(exchange);
 		} else if (token == null)
 			return createUnauthorizedException(exchange, "Invalid or Bearer token Missing");
 
-		//Creating the header to pass it for Authentication.
+		// Creating the header to pass it for Authentication.
 		HttpHeaders header = new HttpHeaders();
 		header.set("Authorization", token);
 		HttpEntity<String> httpEntity = new HttpEntity<>(header);
-		
-		//Slicing out the token
+
+		// Slicing out the token
 		token = token.substring(7);
 		final UUID userId;
 		try {
-			userId = restTemplate.postForEntity("lb://AUTHENTICATION-SERVICE/auth/validateToken",
-					httpEntity, UUID.class).getBody();
+			userId = restTemplate
+					.postForEntity("lb://AUTHENTICATION-SERVICE/auth/validateToken", httpEntity, UUID.class).getBody();
 
 			if (userId == null) {
 				return createUnauthorizedException(exchange, "Invalid Token");
 			} else {
-				System.out.println("Header before adding user Id : "+exchange.getRequest().getHeaders());
-				ServerWebExchange modifiedExchange = exchange.mutate().request(request -> request.header("userId", userId.toString())).build();
-				
+				ServerWebExchange modifiedExchange = exchange.mutate()
+						.request(request -> request.header("userId", userId.toString())).build();
+
 				return chain.filter(modifiedExchange);
 			}
-			
+
 		} catch (HttpClientErrorException.Unauthorized e) {
 			return createUnauthorizedException(exchange, "Invalid Token");
 		} catch (Exception e) {
@@ -81,7 +83,8 @@ public class JwtValidationFilter implements WebFilter {
 	}
 
 	// We have create a custom response with status code, JSON content.
-	//We have to do it manually because RestCOntrollerAdvice don't work here because we are still at filters not yet entered into Controller.
+	// We have to do it manually because RestCOntrollerAdvice don't work here
+	// because we are still at filters not yet entered into Controller.
 	private Mono<Void> createUnauthorizedException(ServerWebExchange exchange, String message) {
 		exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
 		exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);

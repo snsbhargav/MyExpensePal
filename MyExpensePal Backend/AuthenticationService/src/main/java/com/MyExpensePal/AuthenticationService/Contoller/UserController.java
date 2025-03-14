@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,9 +50,9 @@ public class UserController {
 		return userService.validateToken(token);
 	}
 	
-	@DeleteMapping("/removeUser/{userId}")
-	public ResponseEntity<Boolean> removeUser(@PathVariable("userId") UUID userId) throws USER_NOT_FOUND_EXCEPTION {
-		return userService.deleteUserFromDatabase(userId);
+	@DeleteMapping("/removeUser")
+	public ResponseEntity<Boolean> removeUser(@RequestHeader("userId") String userId) throws USER_NOT_FOUND_EXCEPTION {
+		return userService.deleteUserFromDatabase(UUID.fromString(userId));
 	}
 	
 	@GetMapping("/getUserByEmail/{email}")
@@ -59,20 +60,17 @@ public class UserController {
 		return userService.findUserByEmail(email);
 	}
 	
-	@GetMapping("/getUserById/{userId}")
-	public ResponseEntity<UserDto> getUSerById(@PathVariable UUID userId) throws USER_NOT_FOUND_EXCEPTION{
-		return userService.findUserById(userId);
+	@GetMapping("/getUser")
+	public ResponseEntity<UserDto> getUSerById(@RequestHeader("userId") String userId) throws USER_NOT_FOUND_EXCEPTION{
+		return userService.findUserById(UUID.fromString(userId));
 	}
 	
+	//No need of this method.
+	//Only for testing
 	@GetMapping("isUserInDatabase/{userId}")
 	public ResponseEntity<Boolean> isUserExistsInDatabase(@PathVariable UUID userId){
 		return userService.isUserExistsInDatabase(userId);
 	}
 	
-	//For testing
-	@GetMapping("test")
-	public String test() {
-		return "test";
-	}
 
 }
