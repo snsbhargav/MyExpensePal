@@ -1,8 +1,10 @@
 body{
   font-family: Arial, sans-serif;
-  background-color: #111;
-  color: #f2f3f5;
-  /* overflow: hidden; */
+  /* background-color: #111; */
+  background-color: #1b1b1b;
+  /* color: #f2f3f5; */
+  color: #d3f3ef;
+  overflow: hidden;
 }
 .sec {
   display: flex; 
@@ -10,13 +12,15 @@ body{
 
 .sec1{
   height: 100vh;
-  background-color: #111;
+  /* background-color: #111; */
+  background-color: #1b1b1b;
   width: 150%;
   padding: 10px;
+  
 }
 
 .sec1 a{
-  color: #f2f3f5;
+  color: #d3f3ef ;
   text-decoration: none;
   padding: 10px;
   display: block;
@@ -48,7 +52,7 @@ body{
  
 }
 .sec21{
-  height: 8%;
+  height: 6%;
   display: flex;
   justify-content: flex-end;
 }
@@ -90,6 +94,7 @@ body{
   /* padding: 20px; */
   border-radius: 5px;
   background-color: black;
+  /* background-color: #0b0b0b ; */
 }
 
 

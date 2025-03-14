@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import styles from './AddExpense.module.css';
+import styles from '../styles/AddExpense.module.css';
 
 const AddExpense = () => {
+  const id = localStorage.getItem("userId");
   const [data, setData] = useState({
-    userId: "",
+    userId: id,
     expenseName: "",
     expense: "",
     expenseType: "",
@@ -15,7 +16,6 @@ const AddExpense = () => {
   });
 
   const { userId, expenseName, expense, expenseType, location, transactionType, date, time } = data;
-
   const changeHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
@@ -27,7 +27,10 @@ const AddExpense = () => {
         "Content-Type": "application/json"
       }
     }).then(response => {
-      console.log("data submitted", response.data);
+      alert("Expense Added Successfully");
+      setData({
+        userId: id,expenseName: "",expense: "", expenseType: "",location: "",transactionType: "",date: "", time: ""
+      });
     })
     .catch(error => {
       console.error("Error submitting data", error);
@@ -42,7 +45,7 @@ const AddExpense = () => {
       <form onSubmit={submitHandler}>
         {/* <div className={styles.htmlFormGroup}>
           <label htmlFor="userId">UserId</label>
-          <input type="text" id="userId" name='userId' value={userId} onChange={changeHandler} required />
+          <input type="text" id="userId" name='userId' value={id} onChange={changeHandler} required />
         </div> */}
         <div className={styles.htmlFormGroup}>
           <label htmlFor="expenseName">Expense Name</label>

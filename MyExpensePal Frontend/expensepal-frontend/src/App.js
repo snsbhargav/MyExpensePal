@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./pages/Navbar";
 import LogoutButton from "./pages/LogoutButton";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+// import SignUp from "./pages/SignUp";
 import "./App.css";
 import AddExpense from "./pages/AddExpense";
 import Support from "./pages/Support";
 import GetExpense from "./pages/GetExpense";
 import UpdateExpense from "./pages/UpdateExpense";
+import GetUserDetails from "./pages/GetUserDetails";
+import ViewExpense from "./pages/ViewExpense";
 
 
 
@@ -35,6 +37,7 @@ const App = () => {
 
   const handleLogout = () =>{
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     setToken(null);
   }
   return (
@@ -48,7 +51,7 @@ const App = () => {
         <div className="sec21">
           { token &&(
             <div className="profile">
-            <img src="/images/myphoto.jpg" alt="User"/>
+            <Link to="/signup"><img src="/images/myphoto.jpg" alt="User"/></Link>
             <h3 style={{padding:"5px"}}>Hi there,</h3>
           </div>
           )}
@@ -63,10 +66,11 @@ const App = () => {
              <Route path="/dashboard" element={ token ? <Dashboard /> : <Navigate to="/login" />}/>
              <Route path="/login" element={<Login onLogin={handleLogin} />} />
              <Route path="/getexpense" element={ token ? <GetExpense /> : <Navigate to="/login" />}/>
-             <Route path="/signup" element={<SignUp />} />
+             <Route path="/signup" element={<GetUserDetails />} />
              {/* <Route path="/signup" element={<UpdateExpense />} /> */}
              <Route path="/addexpense" element={ token ? <AddExpense /> : <Navigate to="/login" />} />
              <Route path="/updateexpense" element={ token ? <UpdateExpense /> : <Navigate to="/login" />} />
+             <Route path="/viewexpense" element={ token ? <ViewExpense /> : <Navigate to="/login" />} />
              <Route path="/support" element={<Support />} />
              <Route path="*" element={<Navigate to={token ? "/" : "/login"} />} />
            </Routes>

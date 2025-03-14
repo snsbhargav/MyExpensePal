@@ -1,13 +1,16 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import './UpdateExpense.css';
+import '../styles/UpdateExpense.css';
 
 const UpdateExpense = () => {
   const navigate = useNavigate();
   const location=useLocation();
   const expenseData = location.state?.expense || {};
+  //console.log(expenseData.userId);
   const [expense, setExpense]= useState({
+    //userId: expenseData.userId,
+    expenseId: expenseData.expenseId,
     expenseName: expenseData.expenseName || "",
     expense: expenseData.expense || "",
     expenseType: expenseData.expenseType || "",
@@ -16,8 +19,8 @@ const UpdateExpense = () => {
     date: expenseData.date || "",
     time: expenseData.time || ""
   })
-  console.log(expense);
-  console.log(expense.expense);
+  // console.log(expense);
+  // console.log(expense.expense);
   const handleEdit=(e)=>{
     setExpense({...expense, expenseName:e.target.value});
   }
@@ -28,7 +31,7 @@ const UpdateExpense = () => {
       return;
     }
     try{
-      const response = await axios.put('',expense);
+      const response = await axios.put(`http://localhost:8082/expense/updateExpense/${expense.expenseId}`,expense);
       console.log("Updated:", response.data);
       navigate("/getExpense");
     }catch(error){

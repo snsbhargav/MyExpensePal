@@ -6,7 +6,7 @@ import "../App.css";
 const Navbar = () => {
   return (
     <div>
-        <h2 style={{textAlign:"center",color:"#0fdb82"}}>MyExpensePal</h2>
+        <h2 style={{textAlign:"center"}}>MyExpensePal</h2>
         <div className="logo" >            
             <img src="/images/spending.png" alt="User" /> 
         </div>

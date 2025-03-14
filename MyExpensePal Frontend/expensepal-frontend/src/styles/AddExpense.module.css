@@ -3,7 +3,7 @@
     /* margin: 20px auto; */
     /* background-color: aqua; */
     padding: 20px;
-    color: #fff;
+    /* color: #fff; */
 
     flex-direction: column;
     width: 500%;
@@ -12,6 +12,8 @@
 
 .expensehtmlForm h2 {
     /* color: #ddd; */
+    color: #f3f3f3 ;
+    font-weight: bold;
     margin-bottom: 20px;
 }
 
