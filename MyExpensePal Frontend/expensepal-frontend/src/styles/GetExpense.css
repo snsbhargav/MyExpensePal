@@ -1,0 +1,93 @@
+#sec22 {
+    width: 105%;  /* note this width */
+    padding: 20px;
+    overflow-x: auto;
+    
+    /* background-color: antiquewhite; */
+}
+#sec22 h2{
+    color:#f3f3f3 ;
+}
+.expense-table td {  /* Adjust based on column index */
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds '...' if the text is too long */
+    white-space: nowrap;
+}
+.expense-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px;
+    text-align: left;
+    
+}
+
+.expense-table th, 
+.expense-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.expense-table th {
+    background-color: #149b60;
+    color: white;
+}
+
+/* .expense-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+} */
+
+.expense-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.edit-btn, .delete-btn, .view-btn{
+    padding: 5px 10px;
+    margin: 3px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.edit-btn {
+    background-color: #008CBA;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.modal {
+    position: fixed;
+    /* padding: 60px; */
+    top: 7%;  
+    left: 18%; 
+    right: 2%;
+    bottom: 7%;
+    background: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    /* background: white; */
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    /* width: 100%; */
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    cursor: pointer;
+}
