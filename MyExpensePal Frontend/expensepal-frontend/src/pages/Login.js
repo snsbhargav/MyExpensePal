@@ -22,7 +22,7 @@ const Login = ({ onLogin }) => {
         
         try {
             
-            const response = await axios.post("http://localhost:8081/auth/login", formData);
+            const response = await axios.post("http://localhost:8080/auth/login", formData);
             console.log("Login response data:", response.data);
             localStorage.setItem("token", response.data);
             const token = localStorage.getItem("token");
@@ -35,41 +35,6 @@ const Login = ({ onLogin }) => {
             console.error("Login Error:", error.response?.data || error.message);
         }
     };
-    // useEffect(() => {
-    //     const fetchUserData = async () => {
-    //         if (id) {
-    //             try {
-    //                 const token = localStorage.getItem("token");
-    //                 console.log(id);
-    //                 const headers = {
-    //                     Authorization: `Bearer ${token}`
-    //                 };
-                    
-    //                 console.log("Request Headers:", headers);
-    //                 const response = await axios.get('http://localhost:8081/auth/getUserById/' + id, {
-    //                     headers: headers,
-    //                 });
-    //                 console.log("Respone from API is: ",response);
-    //                 console.log(response.data);  
-    //                 setUser(response.data);
-    //                // localStorage.setItem()
-    //             } catch (error) {
-    //                 console.error("Error fetching user data:", error);
-    //             }
-    //         }
-    //     };
-    //     fetchUserData();
-        
-    // }, [id]); 
-    // useEffect(() => {
-    //     if (user.userId) {
-    //         console.log("Updated UUID:", user.userId);
-    //         localStorage.setItem("user", JSON.stringify(user));//JSON.stringfy(user)=> converts objects to a json string
-    //         //if i need to user or get user details parse keyword to be uses: "const storedUser = JSON.parse(localStorage.getItem("user"));"
-    //     }
-        
-    // }, [user]);
-    
 
     return (
         <div className={logstyle.content}>

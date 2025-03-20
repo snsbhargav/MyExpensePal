@@ -10,9 +10,10 @@ const GetUserDetails = () => {
                 const userId = localStorage.getItem("userId");
                 //console.log(userId)
                 const token = localStorage.getItem("token");
-                const response =  await axios.get(`http://localhost:8081/auth/getUserById/`+userId,{
+                const response =  await axios.get(`http://localhost:8080/auth/getUser`,{
                     headers:{
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`,
+                        'UserId': userId
                     }
                 });
                 setUser(response.data);

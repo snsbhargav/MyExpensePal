@@ -8,12 +8,7 @@
 #sec22 h2{
     color:#f3f3f3 ;
 }
-.expense-table td {  /* Adjust based on column index */
-    max-width: 160px;
-    overflow: hidden;
-    text-overflow: ellipsis; /* Adds '...' if the text is too long */
-    white-space: nowrap;
-}
+
 .expense-table {
     width: 100%;
     border-collapse: collapse;
@@ -42,7 +37,7 @@
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-.edit-btn, .delete-btn, .view-btn{
+.edit-btn, .delete-btn, .view-btn, .email-btn{
     padding: 5px 10px;
     margin: 3px;
     border: none;
@@ -59,6 +54,42 @@
 .delete-btn {
     background-color: #f44336;
     color: white;
+}
+.email-btn {
+    background-color: #FF9800;
+    color: white;
+}
+.dwld-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.dwld-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.spinner {
+    /* width: 14px;
+    height: 14px; */
+    border: 2px solid white;
+    border-top: 2px solid #f3f3f3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .modal {
@@ -77,11 +108,11 @@
 }
 
 .modal-content {
-    /* background: white; */
+    background: rgb(114, 89, 89);
     padding: 20px;
     border-radius: 5px;
     max-width: 500px;
-    /* width: 100%; */
+    width: 100%;
 }
 
 .close-btn {
@@ -91,3 +122,20 @@
     font-size: 30px;
     cursor: pointer;
 }
+
+.sortable {
+    cursor: pointer;
+}
+
+.sort-icon {
+    margin-left: 2px;
+    
+}
+.filter-container {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    /* border: 1px solid #ddd; */
+  }

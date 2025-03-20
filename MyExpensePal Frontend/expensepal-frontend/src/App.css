@@ -43,6 +43,9 @@ body{
   list-style: none;
 
 }
+.sec1 h2{
+  color: #0fdb82;
+}
 
 .sec2{
   height: 100vh;
@@ -70,17 +73,14 @@ body{
   padding-right: 45px;
   /* margin-bottom: 15px; */
 }
-.logout {
-  padding: 15px;
-  margin-right: 5px;
-  
-}
-
 .logout-btn{
   background-color: red;
     color: #f2f3f5;
-    padding: 8px 15px;
-    /* width: 115%; */
+    /* padding: 0px 15px; */
+    width: 7%;
+    font-size: medium;
+    height: 80%;
+    margin-top: 5px;
     border: none;
     border-radius: 5px;
     cursor: pointer;

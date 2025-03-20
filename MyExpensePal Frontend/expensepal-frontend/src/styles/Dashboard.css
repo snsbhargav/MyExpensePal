@@ -1,4 +1,47 @@
-.d-main{
-    display:flex;
-    background-color: aqua;
+.d-main {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    width: 79%;
+    top: 7%;
+    gap: 19px;
+}
+
+.d-main1 {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: 70%; 
+}
+
+.d-one {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    height: 25vh; 
+}
+
+.food, .bill, .enter {
+    background-color: #1b1b1b;
+    border-radius: 5px;
+    width: 32%;
+    padding: 10px;
+    text-align: center;
+}
+
+.d-two {
+    background-color: #1b1b1b;
+    padding: 10px;
+    height: 45vh; 
+    border-radius: 5px;
+}
+
+.d-three {
+    background-color: #1b1b1b;
+    padding: 10px;
+    height: 74vh;
+    width: 30%; 
+    border-radius: 5px;
+    overflow-y: auto;
 }

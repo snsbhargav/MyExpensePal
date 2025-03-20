@@ -31,7 +31,10 @@ const UpdateExpense = () => {
       return;
     }
     try{
-      const response = await axios.put(`http://localhost:8082/expense/updateExpense/${expense.expenseId}`,expense);
+      const token = localStorage.getItem("token");
+      const response = await axios.put(`http://localhost:8080/expense/updateExpense/${expense.expenseId}`,expense,{
+        headers: {Authorization: `Bearer ${token}`}
+      });
       console.log("Updated:", response.data);
       navigate("/getExpense");
     }catch(error){

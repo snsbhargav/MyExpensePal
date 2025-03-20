@@ -4,83 +4,91 @@ import LogoutButton from "./pages/LogoutButton";
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
-// import SignUp from "./pages/SignUp";
 import "./App.css";
 import AddExpense from "./pages/AddExpense";
-import Support from "./pages/Support";
 import GetExpense from "./pages/GetExpense";
 import UpdateExpense from "./pages/UpdateExpense";
 import GetUserDetails from "./pages/GetUserDetails";
-import ViewExpense from "./pages/ViewExpense";
-
-
+import Home from "./pages/Home";
+import Chat from "./pages/Chat";
+import SignUp from "./pages/SignUp";
+import AboutUs from "./pages/AboutUs";
+import Settings from "./pages/Settings";
+import Statistics from "./pages/Statistics";
+  
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
-  // useEffect(()=>{
-  //   const storedToken = localStorage.getItem("token");
-  //   if(storedToken) setToken(storedToken);
-  // }, [])
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken && !token) {
-      //!tken id used to prevent unnecessary updates like it will compared with storedToken if it is same or already there then it wont update
       setToken(storedToken);
     }
   }, [token]); 
-  
+
   const handleLogin = (newToken) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
   };
 
-  const handleLogout = () =>{
+  const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     setToken(null);
-  }
+  };
+
   return (
-    
     <Router>
-    <div className="sec">
-      <div className="sec1">
-        {token && <Navbar />} {/*navbar will display onli if user logged in*/}
-      </div>
-      <div className="sec2">
-        <div className="sec21">
-          { token &&(
-            <div className="profile">
-            <Link to="/signup"><img src="/images/myphoto.jpg" alt="User"/></Link>
-            <h3 style={{padding:"5px"}}>Hi there,</h3>
-          </div>
-          )}
-          {token && (
-            <div>{token && <LogoutButton onLogout={handleLogout} />}</div>
-          )}
-          
-        </div>
-        <div className="sec22">
-          <div>
-            <Routes>
-             <Route path="/dashboard" element={ token ? <Dashboard /> : <Navigate to="/login" />}/>
-             <Route path="/login" element={<Login onLogin={handleLogin} />} />
-             <Route path="/getexpense" element={ token ? <GetExpense /> : <Navigate to="/login" />}/>
-             <Route path="/signup" element={<GetUserDetails />} />
-             {/* <Route path="/signup" element={<UpdateExpense />} /> */}
-             <Route path="/addexpense" element={ token ? <AddExpense /> : <Navigate to="/login" />} />
-             <Route path="/updateexpense" element={ token ? <UpdateExpense /> : <Navigate to="/login" />} />
-             <Route path="/viewexpense" element={ token ? <ViewExpense /> : <Navigate to="/login" />} />
-             <Route path="/support" element={<Support />} />
-             <Route path="*" element={<Navigate to={token ? "/" : "/login"} />} />
-           </Routes>
+       <Routes>
+        {/* Landing page which shows after logout or begining */}
+        <Route path="/" element={<Home />} />
 
-           </div>
-        </div>
-      </div>
-    </div>
-    
-
+        {/* Authenticaton pages */}
+        <Route path="/login" element={token ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} />
+        <Route path="/signup" element={<SignUp />} />
+        {/* dashboard layout from here only for authenticated users */}
+        {token ? (
+          <Route path="/*"
+          element={
+            <div className="sec">
+                <div className="sec1">
+                  <Navbar />
+                </div>
+                <div className="sec2">
+                  <div className="sec21">
+                    <div className="profile">
+                      <Link to="/getuserdetails">
+                        <img src="/images/myphoto.jpg" alt="User" />
+                      </Link>
+                      <h3 style={{ padding: "5px" }}>Hi there,</h3>
+                    </div>
+                    <LogoutButton onLogout={handleLogout} />
+                  </div>
+                  <div className="sec22">
+                    <Routes>
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/getexpense" element={<GetExpense />} />
+                      <Route path="/addexpense" element={<AddExpense />} />
+                      <Route path="/updateexpense" element={<UpdateExpense />} />
+                      <Route path="/getuserdetails" element ={<GetUserDetails />} />
+                      <Route path="/chat" element={<Chat />} />
+                      <Route path="/aboutus" element={<AboutUs />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/statistics" element={<Statistics />} />
+                      <Route path="*" element={<Navigate to="/dashboard" />} />
+                    </Routes>
+                  </div>
+                </div>
+              </div>
+            }
+          />
+        ) : (
+          // Redirect unauthenticated users to landing page
+          <Route path="*" element={<Navigate to="/" />} />
+        )}
+       </Routes>
+      
     </Router>
   );
 };

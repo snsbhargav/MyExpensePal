@@ -5,24 +5,31 @@ import { useNavigate } from 'react-router-dom';
 
 const GetExpense = () => {
     const [expenses, setExpenses] = useState([]);
+    const [sortConfig, setSortConfig]=useState({key:'expenseName',direction:'ascending'});
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen]=useState(false);
     const [selectedExpense, setSelectedExpense]=useState(null);
+    const [filteredExpenses, setFilteredExpenses] = useState([]);
+    const [selectedType, setSelectedType] = useState('');
     const navigate=useNavigate();
 
     useEffect(() => {
         const fetchExpenses = async () => {
-            const userId = "41ca3afa-a016-46b2-b1fd-4b1d8ac1dc96";
+            // const userId = "41ca3afa-a016-46b2-b1fd-4b1d8ac1dc96";
+            const userId=localStorage.getItem("userId");
+            console.log("dscsd:",userId);
             const token = localStorage.getItem("token"); 
 
             try {
-                const response = await axios.get(`http://localhost:8082/expense/userId`, {
+                const response = await axios.get(`http://localhost:8080/expense/userId`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'UserId': userId
                     }
                 });
                 setExpenses(response.data);
+                setFilteredExpenses(response.data);
                 //console.log(response.data)
             } catch (error) {
                 console.error("Error fetching expenses:", error);
@@ -32,14 +39,41 @@ const GetExpense = () => {
 
         fetchExpenses();
     }, []);
-    const handleDelete =  (expenseId) => {
+    useEffect(()=>{
+        const handleClickOutside=(event)=>{
+            if(event.target.classList.contains("modal")){
+                setIsModalOpen(false);
+            }
+        };
+        if(isModalOpen){
+            window.addEventListener("click",handleClickOutside);
+        }else{
+            window.removeEventListener("click",handleClickOutside);
+
+        }
+
+        return ()=>{
+            window.removeEventListener("click",handleClickOutside);
+        };
+    },[isModalOpen]);
+    const handleDelete = async  (expenseId) => {
         console.log("Deleting expense:", expenseId);
         const token = localStorage.getItem("token");
         try{
-            axios.delete(`http://localhost:8082/expense/deleteExpense/${expenseId}`,{
+           await axios.delete(`http://localhost:8080/expense/deleteExpense/${expenseId}`,{
                 headers: {Authorization: `Bearer ${token}`}
             });
-            setExpenses(expenses.filter(expense => expense.expenseId !== expenseId));
+            const updatedExpenses = expenses.filter(expense => expense.expenseId !== expenseId);
+            setExpenses(updatedExpenses)
+            // setExpenses(expenses.filter(expense => expense.expenseId !== expenseId));
+            // setFilteredExpenses(expenses.filter(expense => expense.expenseId !== expenseId));
+            if (selectedType) {
+                const filtered = updatedExpenses.filter((expense) => expense.expenseType === selectedType);
+                setFilteredExpenses(filtered);
+            } else {
+                setFilteredExpenses(updatedExpenses); // Show all if no filter is selected
+            }
+            setIsModalOpen(false);
         }catch(error){
             console.error("Error deleting expense:", error);            
             setError("Failed")
@@ -58,33 +92,137 @@ const GetExpense = () => {
     const closeModal=()=>{
         setIsModalOpen(false);
     }
+    const handleEmail = () => {
+        const token = localStorage.getItem("token");
+        const userId = localStorage.getItem("userId");
+    
+        axios.get("http://localhost:8080/mail/sendAllExpensesReport", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'UserId': userId
+            }
+        })
+        .then(response => {
+            console.log("Email sent successfully:", response);
+            alert("Expenses report sent successfully.");
+        })
+        .catch(error => {
+            console.error("Error sending email:", error);
+            alert("Failed to send expenses report.");
+        });
+    };
+    
+    const handleDownload= async ()=>{
+        setLoading(true);
+        const token= localStorage.getItem("token");
+        const userId=localStorage.getItem("userId");
+        try{
+             const response = await axios.get("http://localhost:8080/report/generateReport",{
+                headers:{
+                    Authorization: `Bearer ${token}`,
+                    'UserId': userId
+                },
+                responseType: 'blob' //to download file it is required
+    
+            })
+            const file = new Blob([response.data], {type: 'application/pdf'});//giving file type based on response
+            const link = document.createElement('a');
+            link.href=URL.createObjectURL(file);
+            link.download="report.pdf";//setting default name for pdf
+            document.body.append(link);
+            link.click();
+            document.body.removeChild(link);
 
-    const SortedExpenses = ()=>{
-        return [...expenses].sort((a,b)=>new Date(b.date)- new Date(a.date));
+        }       
+        catch(error){
+            console.error("Error downloading expenses:", error);
+            setError("Failed to Download expenses.");
+        }
+        finally{
+            setLoading(false);
+        }
     }
+    const sortExpenses = (columnName)=>{
+        let direction = 'ascending';
+        if (sortConfig.key === columnName && sortConfig.direction === 'ascending'){
+            direction='descending';
+        }
+        const sortedExpenses = [...filteredExpenses].sort((a,b)=>{
+            // if(a[columnName]<b[columnName]){
+            //     return direction === 'ascending' ? -1 :1;
+            // }
+            // if(a[columnName]>b[columnName]){
+            //     return direction ==='ascending' ? 1 : -1;
+            // }
+            // return 0;
+            if (a[columnName] < b[columnName]) return direction === 'ascending' ? -1 : 1;
+            if (a[columnName] > b[columnName]) return direction === 'ascending' ? 1 : -1;
+            return 0;
+        });
+        setFilteredExpenses(sortedExpenses);
+        setSortConfig({key: columnName, direction});
+    };
+    const handleFilterChange = (e) => {
+        const type = e.target.value;
+        setSelectedType(type);
+    
+        if (type === '') {
+          setFilteredExpenses(expenses); // this for shows expenses if no filter is selected
+        } else {
+          const filtered = expenses.filter((expense) => expense.expenseType === type);
+          setFilteredExpenses(filtered); // Show on selected optoon filtered expenses based on selected type
+        }
+    };
     
 
     return (
         <section id="sec22">
+            
+            <div className="action-container">
             <h2>Your Expenses</h2>
+            <button className="dwld-btn" onClick={handleDownload} disabled={loading}>
+            {loading ? (
+                <>
+                    Downloading... <span className="spinner"></span>
+                </>
+            ) : (
+                "Download"
+            )}
+             </button>
+                <button className='email-btn' onClick={() => handleEmail()}>Send Email</button>
+                <select className="filter-container" onChange={handleFilterChange} value={selectedType}>
+                    <option value="">All</option>
+                    <option value="FOOD">FOOD</option>
+                    <option value="BILLS">Bills</option>
+                    <option value="ENTERTAINMENT">Entertainment</option>
+                </select>
+            </div>
             {error && <p className="error">{error}</p>}
 
             <table className="expense-table">
                 <thead>
                     <tr>
-                        <th>Expense Name</th>
-                        <th>Amount</th>
+                        <th onClick={() => sortExpenses('expenseName')} className="sortable">
+                            Expense Name
+                            {sortConfig.key==='expenseName' ? (sortConfig.direction==='ascending' ? '🔼':'🔽'):'🔼'}
+                        </th>
+                        <th onClick={()=>sortExpenses('expense')} className="sortable">Amount
+                            {sortConfig.key==='expense' ? (sortConfig.direction==='ascending' ? '🔼':'🔽'): '🔼'}
+                        </th>
                         <th>Type</th>
                         <th>Location</th>
                         <th>Transaction Type</th>
-                        <th>Date</th>
+                        <th onClick={()=>sortExpenses('date')} className="sortable">Date
+                            {sortConfig.key==='date' ? (sortConfig.direction==='ascending'? '🔼':'🔽'):'🔼'}
+                        </th>
                         <th>Time</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {SortedExpenses().map((expense) => (
+                    {filteredExpenses.map((expense) => (
                         <tr key={expense.expenseId}>
+                        {/* <tr key={index}> */}
                             <td>{expense.expenseName}</td>
                             <td>${expense.expense}</td>
                             <td>{expense.expenseType}</td>
@@ -116,10 +254,10 @@ const GetExpense = () => {
                         {/*<p><strong>Time:</strong> {selectedExpense.time}</p>*/}
                         <p><strong>Last Modified:</strong> {selectedExpense.lastModified}</p>
                         <div>
-                            <button className='edit-btn' onClick={() => handleEdit(selectedExpense.expense)}>Edit</button>
+                            <button className='edit-btn' onClick={() => handleEdit(selectedExpense)}>Edit</button>
                             <button className='delete-btn' onClick={() => handleDelete(selectedExpense.expenseId)}>Delete</button>
-                            <button>Download</button>
-                            <button>Send Email</button>
+                            <button className='dwld-btn' onClick={()=>handleDownload()}>Download</button>
+                            <button className='email-btn' onClick={()=>handleEmail()}>Send Email</button>
                         </div>
                     </div>
                 </div>

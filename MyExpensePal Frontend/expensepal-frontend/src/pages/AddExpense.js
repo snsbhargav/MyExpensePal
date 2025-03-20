@@ -22,9 +22,11 @@ const AddExpense = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:8082/expense/saveExpense", data, {
+    const token = localStorage.getItem("token");
+    axios.post("http://localhost:8080/expense/saveExpense", data, {
       headers: {
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${token}`
+        // "Content-Type": "application/json"
       }
     }).then(response => {
       alert("Expense Added Successfully");
