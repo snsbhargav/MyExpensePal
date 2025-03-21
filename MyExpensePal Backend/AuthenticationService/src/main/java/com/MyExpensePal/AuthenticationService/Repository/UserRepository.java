@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID>{
 	@Query(value = "SELECT * FROM USER_ENTITY WHERE EMAIL=?", nativeQuery = true)
 	UserEntity findByEmail(String email);
 
+	boolean existsByEmail(String email);
+
 }

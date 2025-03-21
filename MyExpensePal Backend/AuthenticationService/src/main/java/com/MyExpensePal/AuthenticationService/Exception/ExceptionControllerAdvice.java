@@ -13,4 +13,14 @@ public class ExceptionControllerAdvice {
 		return new ResponseEntity<String>("The User you are searching is not in the database.", HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(EMAIL_ALREADY_IN_USE_EXCEPTION.class)
+	public ResponseEntity<String> emailAlreadyInUse(EMAIL_ALREADY_IN_USE_EXCEPTION exception) {
+		return new ResponseEntity<String>("Email already in use, trying different mail.", HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(INCORRECT_PASSWORD_EXCEPTION.class)
+	public ResponseEntity<String> emailAlreadyInUse(INCORRECT_PASSWORD_EXCEPTION exception) {
+		return new ResponseEntity<String>("Incorrect Password.", HttpStatus.OK);
+	}
+	
 }

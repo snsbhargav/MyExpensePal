@@ -8,9 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.MyExpensePal.AuthenticationService.Dto.UpdateUserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserLoginDto;
 import com.MyExpensePal.AuthenticationService.Entity.UserEntity;
+import com.MyExpensePal.AuthenticationService.Exception.EMAIL_ALREADY_IN_USE_EXCEPTION;
+import com.MyExpensePal.AuthenticationService.Exception.INCORRECT_PASSWORD_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Exception.USER_NOT_FOUND_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Mappers.UserMapper;
 import com.MyExpensePal.AuthenticationService.Repository.UserRepository;
@@ -19,7 +22,7 @@ import com.MyExpensePal.AuthenticationService.Service.UserService;
 import io.jsonwebtoken.Claims;
 
 @Component
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -33,6 +36,8 @@ public class UserServiceImpl implements UserService{
 	public ResponseEntity<UserDto> registerUser(UserEntity user) {
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		// Converting userEmail to lower case
+		user.setEmail(user.getEmail().toLowerCase());
 		return new ResponseEntity<>(UserMapper.EntityToDto(userRepository.save(user)), HttpStatus.CREATED);
 	}
 
@@ -56,7 +61,7 @@ public class UserServiceImpl implements UserService{
 		}
 		UUID userId = jwtService.getSubject(claims);
 		UserDto user = findUserById(userId).getBody();
-		
+
 		if (user != null && jwtService.isTokenValid(claims))
 			return new ResponseEntity<UUID>(userId, HttpStatus.OK);
 		else
@@ -73,8 +78,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
-		
-		if(userRepository.findById(userId).isEmpty())
+
+		if (userRepository.findById(userId).isEmpty())
 			throw new USER_NOT_FOUND_EXCEPTION();
 		userRepository.deleteById(userId);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
@@ -83,13 +88,51 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public ResponseEntity<UserDto> findUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
 		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new USER_NOT_FOUND_EXCEPTION());
-		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(user), HttpStatus.CREATED);	}
+		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(user), HttpStatus.CREATED);
+	}
 
 	@Override
 	public ResponseEntity<Boolean> isUserExistsInDatabase(UUID userId) {
-		if(userRepository.findById(userId).isEmpty())
+		if (userRepository.findById(userId).isEmpty())
 			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<UserDto> updateUser(String userId, UpdateUserDto updateUserDto)
+			throws USER_NOT_FOUND_EXCEPTION, EMAIL_ALREADY_IN_USE_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		UserEntity userEntity = userRepository.findById(UUID.fromString(userId)).get();
+
+		if (userEntity == null) {
+
+			throw new USER_NOT_FOUND_EXCEPTION();
+
+		} else if (!updateUserDto.getEmail().equalsIgnoreCase(userEntity.getEmail())) {
+
+			if (userRepository.existsByEmail(updateUserDto.getEmail()))
+				throw new EMAIL_ALREADY_IN_USE_EXCEPTION();
+			else
+				// Implement Email Confirmation In Future.
+				userEntity.setEmail(updateUserDto.getEmail().toLowerCase());
+
+		} else if (updateUserDto.getOldPassword() != null && updateUserDto.getNewPassword() != null) {
+			// Validating the old password
+			if (passwordEncoder.matches(updateUserDto.getOldPassword(), userEntity.getPassword())) {
+				userEntity.setPassword(passwordEncoder.encode(updateUserDto.getNewPassword()));
+			} else
+				throw new INCORRECT_PASSWORD_EXCEPTION();
+		}
+
+		userEntity.setFirstName(updateUserDto.getFirstName());
+		userEntity.setLastName(updateUserDto.getLastName());
+		userEntity.setGender(updateUserDto.getGender());
+		userEntity.setPhone(updateUserDto.getPhone());
+		userEntity.setBio(updateUserDto.getBio());
+		userEntity.setDateOfBirth(updateUserDto.getDateOfBirth());
+
+		UserEntity updatedUserEntity = userRepository.save(userEntity);
+
+		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(updatedUserEntity), HttpStatus.OK);
 	}
 
 }
