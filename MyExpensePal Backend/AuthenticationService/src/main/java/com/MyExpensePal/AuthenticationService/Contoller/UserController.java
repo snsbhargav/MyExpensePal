@@ -69,11 +69,9 @@ public class UserController {
 		return userService.findUserById(UUID.fromString(userId));
 	}
 
-	// No need of this method.
-	// Only for testing
-	@GetMapping("isUserInDatabase/{userId}")
-	public ResponseEntity<Boolean> isUserExistsInDatabase(@PathVariable UUID userId) {
-		return userService.isUserExistsInDatabase(userId);
+	@GetMapping("/isUserInDatabase")
+	public ResponseEntity<Boolean> isUserExistsInDatabase(@RequestHeader("userId") String userId) {
+		return userService.isUserExistsInDatabase(UUID.fromString(userId));
 	}
 
 	@PutMapping("/updateUser")
