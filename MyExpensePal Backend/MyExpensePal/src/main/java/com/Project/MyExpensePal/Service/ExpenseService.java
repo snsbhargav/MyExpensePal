@@ -1,5 +1,7 @@
 package com.Project.MyExpensePal.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -15,7 +17,7 @@ import com.Project.MyExpensePal.Exception.NO_USER_EXPENSES_FOUND_EXCEPTION;
 @Service
 public interface ExpenseService {
 
-	public ResponseEntity<String> saveExpenseToDatabase(ExpenseEntity expensesModel);
+	public ResponseEntity<String> saveExpenseToDatabase(String userId, ExpenseEntity expensesModel);
 
 	public ResponseEntity<ExpenseEntity> retreiveExpenseByExpenseId(UUID expenseId);
 
@@ -28,4 +30,6 @@ public interface ExpenseService {
 	public ResponseEntity<List<ExpenseEntity>> tenLatestTransactions(UUID userId) throws NO_USER_EXPENSES_FOUND_EXCEPTION;
 
 	public ResponseEntity<Integer> findTotalBasedOnExpenseType(UUID userId, String expenseType);
+
+	public ResponseEntity<List<Map<String, Integer>>> getTopThreeCategoriesOfMonth(UUID userId, String startDate, String endDate);
 }
