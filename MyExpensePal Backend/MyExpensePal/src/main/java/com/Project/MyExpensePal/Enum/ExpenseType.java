@@ -2,5 +2,5 @@ package com.Project.MyExpensePal.Enum;
 
 public enum ExpenseType {
 
-	FOOD, BILLS, ENTERTAINMENT
+	ENTERTAINMENT, FOOD, HOME, LIFE, TRANSPORTATION, UTILITIES, UNCATEGORIZED
 }
