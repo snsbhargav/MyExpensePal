@@ -29,6 +29,7 @@ const GetExpense = () => {
                     }
                 });
                 setExpenses(response.data);
+               
                 setFilteredExpenses(response.data);
                 //console.log(response.data)
             } catch (error) {
@@ -192,7 +193,8 @@ const GetExpense = () => {
                 <button className='email-btn' onClick={() => handleEmail()}>Send Email</button>
                 <select className="filter-container" onChange={handleFilterChange} value={selectedType}>
                     <option value="">All</option>
-                    <option value="FOOD">FOOD</option>
+                    <option value="FOOD">Food</option>
+                    <option value="TRAVEL">Travel</option>
                     <option value="BILLS">Bills</option>
                     <option value="ENTERTAINMENT">Entertainment</option>
                 </select>

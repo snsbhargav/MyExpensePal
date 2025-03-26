@@ -60,6 +60,7 @@ const UpdateExpense = () => {
         <label>Expense Type</label>
         <select id="expenseType" value={expense.expenseType} onChange={(e)=>setExpense({...expense, expenseType:e.target.value})} >
             <option value="FOOD">Food</option>
+            <option value="TRAVEL">Travel</option>
             <option value="ENTERTAINMENT">Entertainment</option>
             <option value="BILLS">Bills</option>
         </select>

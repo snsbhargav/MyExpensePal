@@ -1,0 +1,132 @@
+.udcontainer{
+    height: 100%;
+    /* background-color: beige; */
+    /* color: black; */
+    width: 100%;
+    /* overflow: hidden; */
+    box-sizing: border-box;
+}
+.image-edit{
+    /* background-color: rgb(236, 232, 227); */
+    height: 15%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* border: 1px solid white; */
+    box-sizing: border-box;
+    
+}
+.userdetails{
+    /* background-color: rgb(203, 233, 223); */
+    height: 85%;
+    padding: 10px 0px 0px 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* border: 1px solid white; */
+    box-sizing: border-box;
+    
+}
+.usergroup{
+    display: flex;    
+    gap: 34%;
+    padding: 10px;
+    /* width: 99%; */
+    box-sizing: border-box;
+    /* background-color: aqua; */
+}
+.usergroup-section{
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    
+}
+.usergroup-section label{
+    
+    width: 300%;
+    /* background-color: red; */
+    padding-top: 8px;
+    font-size: 16px;
+    font-weight: bold;
+
+}
+.usergroup-section input[type="text"],
+.usergroup-section input[type="number"],
+
+.usergroup-section input[type="email"],
+.usergroup-section input[type="tel"],
+.usergroup-section input{
+    
+    width: 300%;
+    
+    border-radius: 5px;
+    color: aliceblue;
+    border: none;
+    background-color: #555;
+    font-size: 14px;
+    box-sizing: border-box;
+    padding: 10px 10px 10px 0px;
+    font-size: 14px;
+    /* background-color: red; */
+}
+
+.usergroup-section input[type="date"]{
+    /* background-color: #3a60e7; */
+    width: 550px;
+    /* padding-left: 0px; */
+}
+
+.bio-input{
+    width: 270%;
+    height: 150px; 
+    border-radius: 5px;
+    border: none;
+    background-color: #555;
+    font-size: 14px;
+    padding: 10px;
+    /* box-sizing: border-box; */
+}
+.edituser-btn {
+    background-color: #3a60e7;
+    color: white;
+    padding: 10px 30px;
+    margin-right: 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 8px;
+}
+.usergroup-section input[type="password"] {
+    width: 25%;
+    border-radius: 5px;
+    color: aliceblue;
+    border: none;
+    /* background-color: #ddd; */
+    font-size: 14px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+.userpassword{
+    /* width: 100%; */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+
+.save-changes-btn {
+    background-color: #3a60e7; 
+    color: white;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px; 
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+
+
+
+

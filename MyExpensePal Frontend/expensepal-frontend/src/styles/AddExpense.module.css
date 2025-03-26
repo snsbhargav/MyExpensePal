@@ -4,11 +4,11 @@
     /* background-color: aqua; */
     padding: 20px;
     /* color: #fff; */
-
     flex-direction: column;
-    width: 500%;
+    width: 400%;
     border-radius: 5px;
 }
+
 
 .expensehtmlForm h2 {
     /* color: #ddd; */
@@ -19,7 +19,7 @@
 
 hr {
     border: 1px solid #5a95ff;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 
 .htmlFormGroup {
@@ -45,7 +45,7 @@ hr {
     background-color: #555;
     color: #fff;
     width: 50%;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
 }
 
 .expensehtmlForm select {

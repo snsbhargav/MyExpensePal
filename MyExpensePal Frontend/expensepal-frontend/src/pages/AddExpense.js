@@ -40,7 +40,7 @@ const AddExpense = () => {
   };
 
   return (
-    <div className='sec222'>
+    <div className={styles.addexpense22}>
     <div className={styles.expensehtmlForm}>
       <h2>New Expense</h2>
       <hr />
@@ -64,6 +64,7 @@ const AddExpense = () => {
             <option value="FOOD">Food</option>
             <option value="ENTERTAINMENT">Entertainment</option>
             <option value="BILLS">Bills</option>
+            <option value="TRAVEL">Travel</option>
           </select>
         </div>
         <div className={styles.htmlFormGroup}>
