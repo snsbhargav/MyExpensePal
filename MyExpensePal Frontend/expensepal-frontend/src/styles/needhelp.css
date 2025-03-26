@@ -1,0 +1,27 @@
+.support-container {
+  height: 100vh;
+  width: 100vw;
+    padding: 20px;
+    color: white;
+    box-sizing: border-box;
+    /* background-color: #111; */
+  }
+  
+   .support-container h1 {
+    text-align: center;
+    color: #0fdb82;
+  }
+  
+  .support-container h2 {
+    color: #0fdb82;
+  }
+  
+  .support-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .support-container li {
+    margin-bottom: 10px;
+  }
+  

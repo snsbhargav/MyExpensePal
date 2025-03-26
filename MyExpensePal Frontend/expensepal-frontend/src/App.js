@@ -15,10 +15,15 @@ import SignUp from "./pages/SignUp";
 import AboutUs from "./pages/AboutUs";
 import Settings from "./pages/Settings";
 import Statistics from "./pages/Statistics";
+import NeedHelp from "./pages/NeedHelp";
+import UpdateUserDetails from "./pages/UpdateUserDetails";
+import Features from "./pages/Features";
+import LandingPageNavbar from "./pages/LandingPageNavabar";
   
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
+  
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -41,14 +46,19 @@ const App = () => {
   return (
     <Router>
        <Routes>
-        {/* Landing page which shows after logout or begining */}
-        <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingPageNavbar />}>
+            <Route index element={<Home />} />
+            <Route path="aboutus" element={<AboutUs />} />
+            <Route path="features" element={<Features />} />
+            <Route path="needhelp" element={<NeedHelp />} />
+            <Route path="login" element={token ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} />
+            <Route path="signup" element={<SignUp />} />
+          </Route>
 
-        {/* Authenticaton pages */}
-        <Route path="/login" element={token ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} />
-        <Route path="/signup" element={<SignUp />} />
-        {/* dashboard layout from here only for authenticated users */}
-        {token ? (
+          {/* Authenticaton pages */}
+        
+          {/* dashboard layout from here only for authenticated users */}
+          {token ? (
           <Route path="/*"
           element={
             <div className="sec">
@@ -57,6 +67,7 @@ const App = () => {
                 </div>
                 <div className="sec2">
                   <div className="sec21">
+                    <div><Link to="/needhelp">Need Help?</Link></div>
                     <div className="profile">
                       <Link to="/getuserdetails">
                         <img src="/images/myphoto.jpg" alt="User" />
@@ -67,16 +78,16 @@ const App = () => {
                   </div>
                   <div className="sec22">
                     <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/dashboard" element={ token ? <Dashboard /> : <Navigate to="/login" />}/>
                       <Route path="/getexpense" element={<GetExpense />} />
                       <Route path="/addexpense" element={<AddExpense />} />
                       <Route path="/updateexpense" element={<UpdateExpense />} />
                       <Route path="/getuserdetails" element ={<GetUserDetails />} />
                       <Route path="/chat" element={<Chat />} />
-                      <Route path="/aboutus" element={<AboutUs />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/statistics" element={<Statistics />} />
-                      <Route path="*" element={<Navigate to="/dashboard" />} />
+                      <Route path="/updateuserdetails" element={<UpdateUserDetails onLogout={handleLogout} />} />
+                      {/* <Route path="*" element={<Navigate to="/" />} /> */}
                     </Routes>
                   </div>
                 </div>

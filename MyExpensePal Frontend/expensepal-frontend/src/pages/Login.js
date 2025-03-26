@@ -1,7 +1,8 @@
 import React, {useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import logstyle from '../styles/Login.module.css'
+// import logstyle from '../styles/Login.module.css'
+import '../styles/Login.css';
 import axios from 'axios';
 
 
@@ -37,14 +38,25 @@ const Login = ({ onLogin }) => {
     };
 
     return (
-        <div className={logstyle.content}>
-            <h1 style={{ textAlign: "center" }}>User Authentication</h1>
-            <form onSubmit={submitHandler}>
-                <input type="email" name="email" value={formData.email} onChange={changeHandler} placeholder='Email' /><br />
-                <input type="password" name="password" value={formData.password} onChange={changeHandler} placeholder='Password' /><br />
-                <input type="submit" value="Login" />
-            </form>
+        <div className='login-main'>
+            <div className="login-container">
+                <form className="form-container" onSubmit={submitHandler}>
+                    <h2>Login</h2>
+                    <label htmlFor="email">Email</label>
+                    <input type="email" name="email" value={formData.email} onChange={changeHandler} placeholder='Email' />
+                    
+                    <label htmlFor="password">Password</label>
+                    <input type="password" name="password" value={formData.password} onChange={changeHandler} placeholder='Password' />
+                    
+                    <button type="submit" value="Login">Login</button>
+                    
+                    <p><a href="#">Forgot password?</a></p>
+                    <p>Don't have an account? <a href="#">Sign up</a></p>            
+                </form>
+            </div>
+
         </div>
+        
     );
 };
 
