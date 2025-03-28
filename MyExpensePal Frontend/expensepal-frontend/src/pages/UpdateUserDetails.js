@@ -86,9 +86,9 @@ const UpdateUserDetails = ({onLogout}) => {
                     <input type='UUID' id='userId' name='userId' value={userData.userId} readOnly/>
                 </div>
             </div>
-            <div className='usergroup' style={{gap:"400px"}}>
+            <div className='usergroup' style={{gap:"400px", overflow:"hidden"}}>
                                
-                <div className='usergroup-section'>
+                <div className='usergroup-section' >
                     <label>Bio</label>
                     {/* <input className='bio-input'/> */}
                     <textarea className="bio-input" value={userData.bio} onChange={(e)=>setUserDetails({...userDetails, bio:e.target.value})}></textarea>
@@ -129,11 +129,6 @@ const UpdateUserDetails = ({onLogout}) => {
 <button type="submit" className="save-changes-btn">Save Changes</button>
 
 </div>
-
-
-
-
-
         </form>      
     </div>
   )

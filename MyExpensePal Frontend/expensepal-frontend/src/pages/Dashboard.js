@@ -23,6 +23,7 @@ const Dashboard = () => {
   const [entertainmentTotal, setEntertainmentTotal] = useState(0);
   const [monthlyData, setMonthlyData] = useState({});
   const [selectedYear, setSelectedYear] = useState(null);
+  const [tenLatestTransactions, setTenLatestExpense]= useState([]);
   
   
   useEffect(() => {
@@ -42,9 +43,25 @@ const Dashboard = () => {
         console.error(`Error fetching ${expenseType} total:`, error);
       }
     };
+    const fetchTenLatestExpenses = async () =>{
+      try{
+        const response = await axios.get('http://localhost:8080/expense/tenLatestTransactions',{
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'userId':userId
+          }
+
+        });
+        setTenLatestExpense(response.data);
+        
+      }catch(error){
+        console.error("Error Fetching Expenses: ", error);
+      }
+    };
+    fetchTenLatestExpenses();
     // Fetch totals for each category
     fetchExpenseTotal("FOOD", setFoodTotal);
-    fetchExpenseTotal("BILLS", setBillsTotal);
+    fetchExpenseTotal("UTILITIES", setBillsTotal);
     fetchExpenseTotal("ENTERTAINMENT", setEntertainmentTotal);
 
     const fetchExpenses = async () => {
@@ -74,7 +91,7 @@ const Dashboard = () => {
         const month = date.getMonth();
 
         if (!expenseMap[year]) {
-          expenseMap[year] = Array(12).fill(0); // Initialize an array for the months
+          expenseMap[year] = Array(12).fill(0); // Initializing an array for the months
         }
         expenseMap[year][month] += expense.expense;
       });
@@ -105,10 +122,9 @@ const Dashboard = () => {
   };
 
   const years = Object.keys(monthlyData);
-
-
- 
-  
+  useEffect(()=>{
+    console.log(tenLatestTransactions);
+  },[tenLatestTransactions]);
   return (
     <div className='d-main'>
       
@@ -120,7 +136,7 @@ const Dashboard = () => {
            
           </div>
           <div className='bill'>
-            <h4>Bills</h4>
+            <h4>Utilities</h4>
             <p>Total: ${billsTotal}</p>
 
           </div>
@@ -149,16 +165,22 @@ const Dashboard = () => {
           
         </div>
       </div>
-      <div className='d-three'>
+      <div className='d-three' style={{fontSize:"12px"}}>
         <h3>Latest 10 Expenses</h3>
-      <p>ssdxsxsxsdxs</p>
-      <p>ssdxsxsxsdxs</p>
-        <p>ssdxshhhhhhhhhxsxsdxs</p>
-        <p>ssdxsxsxsdxs</p>
-        <p>ssdxsxsxsdxs</p>
-      <p>ssdxsxsxsdxs</p>
-        <p>ssdxshhhhhhhhhxsxsdxs</p>
-        <p>ssdxsxsxsdxs</p>
+        <ul style={{listStyle:"none", padding:"0px"}}>
+          {tenLatestTransactions.map((item)=>(
+            <li key={item.expenseId} style={{listStyle:"none"}}>
+              <div style={{display:"flex", justifyContent:"space-between", border:"1px solid white", borderLeft:"none", paddingTop:"10px",  borderRight:"none"}}>
+                <div>
+                  <strong>{item.expenseName}</strong>  
+                  <p>{item.date}</p>
+                </div>
+                <div style={{display:"flex",justifyContent:"center",alignItems:"center", color:"red"}}>{item.expense}</div>
+              </div>
+              {/* <p>{item.expenseName} {item.date} {item.expenseName} {item.expense}</p> */}
+            </li>
+          ))}
+        </ul>
         
       </div>
       

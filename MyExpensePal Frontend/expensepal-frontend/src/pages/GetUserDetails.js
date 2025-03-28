@@ -88,7 +88,7 @@ const GetUserDetails = () => {
                 </div>
                 
             </div>
-            <div className='usergroup'>
+            <div className='usergroup' style={{overflow:"hidden"}}>
             <div className='usergroup-section'>
                 <label htmlFor='userId'>UserId</label>
                 <input type='UUID' id='userId' name='userId' value={user.userId} readOnly/>
