@@ -21,9 +21,14 @@ import org.springframework.web.client.RestTemplate;
 import com.Project.MyExpensePal.Entity.ExpenseEntity;
 import com.Project.MyExpensePal.Enum.ExpenseType;
 import com.Project.MyExpensePal.Exception.EXPENSE_ID_NOT_FOUND;
+import com.Project.MyExpensePal.Exception.NO_FILTERS_TO_GENETRATE_QUERY_EXCEPTION;
 import com.Project.MyExpensePal.Exception.NO_USER_EXPENSES_FOUND_EXCEPTION;
 import com.Project.MyExpensePal.Repository.ExpensesRepository;
 import com.Project.MyExpensePal.Service.ExpenseService;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
@@ -33,6 +38,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	public ResponseEntity<String> saveExpenseToDatabase(String userId, ExpenseEntity expenseEntity) {
@@ -126,6 +134,55 @@ public class ExpenseServiceImpl implements ExpenseService {
 		
 		List<Map<String, Integer>> categoryTotals = expensesRepository.getTopThreeCategoriesOfMonth(userId, startDate, endDate);
 		return new ResponseEntity<List<Map<String, Integer>>>(categoryTotals, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<ExpenseEntity>> getMatchingEntitiesUsingFilter(String userId, ExpenseEntity filterData) throws NO_FILTERS_TO_GENETRATE_QUERY_EXCEPTION {
+		// TODO Auto-generated method stub
+		StringBuilder queryWithFilters = generateQueryToGetMatchingEntities(userId, filterData);
+		if(queryWithFilters == null)
+			throw new NO_FILTERS_TO_GENETRATE_QUERY_EXCEPTION();
+		Query query = entityManager.createNativeQuery(queryWithFilters.toString(), ExpenseEntity.class);
+		List<ExpenseEntity> expenseList = query.getResultList();
+		return new ResponseEntity<List<ExpenseEntity>>(expenseList, HttpStatus.OK);
+	}
+	
+	private StringBuilder generateQueryToGetMatchingEntities(String userId, ExpenseEntity filter) {
+		StringBuilder query = new StringBuilder("SELECT * FROM MY_EXPENSES_PAL.EXPENSE_ENTITY WHERE USER_ID=UNHEX(REPLACE('"+userId+"', '-', ''))");
+		boolean isFilterNull = true;
+		if(filter.getExpenseName() !=null) {
+			query.append(" AND EXPENSE_NAME LIKE '%"+filter.getExpenseName()+"%'");
+			isFilterNull = false;
+		} 
+		if(filter.getExpense() != null) {
+			query.append(" AND EXPENSE = "+filter.getExpense());
+			isFilterNull = false;
+		}
+		if(filter.getExpenseType() != null) {
+			query.append(" AND EXPENSE_TYPE = '"+filter.getExpenseType()+"'");
+			isFilterNull = false;
+		}
+		if(filter.getDate() != null) {
+			query.append(" AND DATE = '"+filter.getDate()+"'");
+			isFilterNull = false;
+		}
+		if(filter.getTime() != null) {
+			query.append(" AND TIME = '"+filter.getTime()+"'");
+			isFilterNull = false;
+		}
+		if(filter.getLocation() != null) {
+			query.append(" AND LOCATION LIKE '%"+filter.getLocation()+"%'");
+			isFilterNull = false;
+		}
+		if(filter.getTransactionType() != null) {
+			query.append(" AND TRANSACTION_TYPE = '"+filter.getTransactionType()+"'");
+			isFilterNull = false;
+		}
+		query.append(";");
+		if(isFilterNull)
+			return null;
+		return query;
+				
 	}
 
 }

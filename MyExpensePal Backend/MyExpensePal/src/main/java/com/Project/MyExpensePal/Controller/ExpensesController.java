@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.Project.MyExpensePal.Entity.ExpenseEntity;
+import com.Project.MyExpensePal.Exception.NO_FILTERS_TO_GENETRATE_QUERY_EXCEPTION;
 import com.Project.MyExpensePal.Exception.NO_USER_EXPENSES_FOUND_EXCEPTION;
 import com.Project.MyExpensePal.Service.ExpenseService;
 
@@ -65,20 +66,20 @@ public class ExpensesController {
 	}
 
 	@GetMapping("/tenLatestTransactions")
-	public ResponseEntity<List<ExpenseEntity>> retrieveTenLatestTransactions(@RequestHeader("userId") UUID userId)
+	public ResponseEntity<List<ExpenseEntity>> retrieveTenLatestTransactions(@RequestHeader("userId") String userId)
 			throws NO_USER_EXPENSES_FOUND_EXCEPTION {
-		return expenseService.tenLatestTransactions(userId);
+		return expenseService.tenLatestTransactions(UUID.fromString(userId));
 	}
 
 	@GetMapping("/calculateTotalSumOfExpenseType/{expenseType}")
-	public ResponseEntity<Integer> findTotalAmountBasedOnExpenseType(@RequestHeader("userId") UUID userId,
+	public ResponseEntity<Integer> findTotalAmountBasedOnExpenseType(@RequestHeader("userId") String userId,
 			@PathVariable("expenseType") String expenseType) {
-		return expenseService.findTotalBasedOnExpenseType(userId, expenseType);
+		return expenseService.findTotalBasedOnExpenseType(UUID.fromString(userId), expenseType);
 	}
 
-	//If fromDate and toDate provided it calculates between this period or
-	//If only fromDate provided it takes between fromDate and end of that month.
-	//If none provided it takes present month's start and end date.
+	// If fromDate and toDate provided it calculates between this period or
+	// If only fromDate provided it takes between fromDate and end of that month.
+	// If none provided it takes present month's start and end date.
 	@GetMapping("/getTopThreeCategoriesOfMonth")
 	public ResponseEntity<List<Map<String, Integer>>> getTopThreeCategoriesOfMonth(
 			@RequestHeader("userId") String userId,
@@ -86,5 +87,11 @@ public class ExpensesController {
 			@RequestHeader(value = "toDate", required = false) String toDate) throws ParseException {
 
 		return expenseService.getTopThreeCategoriesOfMonth(UUID.fromString(userId), fromDate, toDate);
+	}
+
+	@GetMapping("/getMatchingEntities")
+	public ResponseEntity<List<ExpenseEntity>> getMatchingEntities(@RequestHeader("userId") String userId, 
+			@RequestBody ExpenseEntity filterData) throws NO_FILTERS_TO_GENETRATE_QUERY_EXCEPTION{
+		return expenseService.getMatchingEntitiesUsingFilter(userId, filterData);
 	}
 }
