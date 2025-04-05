@@ -5,7 +5,7 @@ from Models.ModelResponse import ModelResponse
 
 # Set your OpenAI API key
 client = OpenAI(
-    api_key="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")
+    api_key="")
 
 
 def detect_intent_and_extract_data(query, timestamp):
