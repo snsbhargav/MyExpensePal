@@ -16,6 +16,7 @@ import com.MyExpensePal.AuthenticationService.Dto.UpdateUserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserLoginDto;
 import com.MyExpensePal.AuthenticationService.Entity.UserEntity;
+import com.MyExpensePal.AuthenticationService.Entity.UserSettingsEntity;
 import com.MyExpensePal.AuthenticationService.Exception.EMAIL_ALREADY_IN_USE_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Exception.INCORRECT_PASSWORD_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Exception.USER_NOT_FOUND_EXCEPTION;
@@ -45,6 +46,12 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// Converting userEmail to lower case
 		user.setEmail(user.getEmail().toLowerCase());
+		//Initialize with default settings
+		UserSettingsEntity defaultSettings = UserSettingsEntity.builder()
+				.receiveMonthlyExpenseReport(true)
+				.build();
+		defaultSettings.setUserEntity(user);
+		user.setSettings(defaultSettings);
 		return new ResponseEntity<>(UserMapper.EntityToDto(userRepository.save(user)), HttpStatus.CREATED);
 	}
 
@@ -86,6 +93,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId, String password) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
 		resetAccount(userId, password);
+		
 		//Now delete the user
 		userRepository.deleteById(userId);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
