@@ -63,6 +63,11 @@ public class ExpensesController {
 	public ResponseEntity<String> deleteExpense(@PathVariable("expenseId") UUID expenseId) {
 		return expenseService.deleteExpense(expenseId);
 	}
+	
+	@DeleteMapping("/deleteAllExpensesOfUser")
+	public ResponseEntity<Boolean> deleteAllExpensesOfUser(@RequestHeader("userId") String userId){
+		return expenseService.deleteAllExpensesOfUser(UUID.fromString(userId));
+	}
 
 	@GetMapping("/tenLatestTransactions")
 	public ResponseEntity<List<ExpenseEntity>> retrieveTenLatestTransactions(@RequestHeader("userId") UUID userId)

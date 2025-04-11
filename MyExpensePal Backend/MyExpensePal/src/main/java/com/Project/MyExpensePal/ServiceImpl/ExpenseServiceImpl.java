@@ -128,4 +128,10 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return new ResponseEntity<List<Map<String, Integer>>>(categoryTotals, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<Boolean> deleteAllExpensesOfUser(UUID userId) {
+		expensesRepository.deleteExpenseByUserId(userId);
+		return new ResponseEntity<>(true, HttpStatus.OK);
+	}
+
 }
