@@ -80,5 +80,10 @@ public class UserController {
 			throws USER_NOT_FOUND_EXCEPTION, EMAIL_ALREADY_IN_USE_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
 		return userService.updateUser(userId, updateUserDto);
 	}
+	
+	@DeleteMapping("/deleteAccount")
+	public ResponseEntity<Boolean> deleteUser(@RequestHeader("userId") String userId) throws USER_NOT_FOUND_EXCEPTION{
+		return userService.deleteUserFromDatabase(UUID.fromString(userId));
+	}
 
 }

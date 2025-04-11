@@ -3,10 +3,14 @@ package com.MyExpensePal.AuthenticationService.ServiceImpl;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.MyExpensePal.AuthenticationService.Dto.UpdateUserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserDto;
@@ -29,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -81,6 +88,13 @@ public class UserServiceImpl implements UserService {
 
 		if (userRepository.findById(userId).isEmpty())
 			throw new USER_NOT_FOUND_EXCEPTION();
+		
+		//Delete all the expenses as well
+		HttpHeaders header = new HttpHeaders();
+		header.add("userId", userId.toString());
+		HttpEntity<String> entity = new HttpEntity<>(header);
+		restTemplate.exchange("lb://MY-EXPENSE-PAL/expense/deleteAllExpensesOfUser", HttpMethod.DELETE,entity, void.class);
+		//Now delete the user
 		userRepository.deleteById(userId);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
