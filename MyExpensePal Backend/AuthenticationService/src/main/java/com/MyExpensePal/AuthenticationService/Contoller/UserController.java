@@ -54,11 +54,6 @@ public class UserController {
 		return userService.validateToken(token);
 	}
 
-	@DeleteMapping("/removeUser")
-	public ResponseEntity<Boolean> removeUser(@RequestHeader("userId") String userId) throws USER_NOT_FOUND_EXCEPTION {
-		return userService.deleteUserFromDatabase(UUID.fromString(userId));
-	}
-
 	@GetMapping("/getUserByEmail/{email}")
 	public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) throws USER_NOT_FOUND_EXCEPTION {
 		return userService.findUserByEmail(email);
@@ -80,10 +75,18 @@ public class UserController {
 			throws USER_NOT_FOUND_EXCEPTION, EMAIL_ALREADY_IN_USE_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
 		return userService.updateUser(userId, updateUserDto);
 	}
-	
+
+	@DeleteMapping("/resetAccount")
+	public ResponseEntity<Boolean> resetAccount(@RequestHeader("userId") String userId,
+			@RequestHeader("password") String password) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		return userService.resetAccount(UUID.fromString(userId), password);
+	}
+
+	// Pass password in header
 	@DeleteMapping("/deleteAccount")
-	public ResponseEntity<Boolean> deleteUser(@RequestHeader("userId") String userId) throws USER_NOT_FOUND_EXCEPTION{
-		return userService.deleteUserFromDatabase(UUID.fromString(userId));
+	public ResponseEntity<Boolean> deleteUser(@RequestHeader("userId") String userId,
+			@RequestHeader("password") String password) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		return userService.deleteUserFromDatabase(UUID.fromString(userId), password);
 	}
 
 }

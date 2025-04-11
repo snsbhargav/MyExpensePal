@@ -84,16 +84,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
-
-		if (userRepository.findById(userId).isEmpty())
-			throw new USER_NOT_FOUND_EXCEPTION();
-		
-		//Delete all the expenses as well
-		HttpHeaders header = new HttpHeaders();
-		header.add("userId", userId.toString());
-		HttpEntity<String> entity = new HttpEntity<>(header);
-		restTemplate.exchange("lb://MY-EXPENSE-PAL/expense/deleteAllExpensesOfUser", HttpMethod.DELETE,entity, void.class);
+	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId, String password) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		resetAccount(userId, password);
 		//Now delete the user
 		userRepository.deleteById(userId);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
@@ -148,5 +140,29 @@ public class UserServiceImpl implements UserService {
 
 		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(updatedUserEntity), HttpStatus.OK);
 	}
+	
+
+	@Override
+	public ResponseEntity<Boolean> resetAccount(UUID userId, String password)
+			throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		UserEntity user = userRepository.findById(userId).get();
+		if (user == null)
+			throw new USER_NOT_FOUND_EXCEPTION();
+		//Check if the password matches
+		if (!passwordEncoder.matches(password, user.getPassword()))
+			throw new INCORRECT_PASSWORD_EXCEPTION();
+		
+		//Delete all the expenses as well
+		removeAllExpensesOfUser(userId);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	private void removeAllExpensesOfUser(UUID userId) {
+		HttpHeaders header = new HttpHeaders();
+		header.add("userId", userId.toString());
+		HttpEntity<String> entity = new HttpEntity<>(header);
+		restTemplate.exchange("lb://MY-EXPENSE-PAL/expense/resetUserAccount", HttpMethod.DELETE,entity, void.class);
+	}
+
 
 }

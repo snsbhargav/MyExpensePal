@@ -64,7 +64,7 @@ public class ExpensesController {
 		return expenseService.deleteExpense(expenseId);
 	}
 	
-	@DeleteMapping("/deleteAllExpensesOfUser")
+	@DeleteMapping("/resetUserAccount")
 	public ResponseEntity<Boolean> deleteAllExpensesOfUser(@RequestHeader("userId") String userId){
 		return expenseService.deleteAllExpensesOfUser(UUID.fromString(userId));
 	}
