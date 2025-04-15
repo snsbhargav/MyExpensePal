@@ -34,4 +34,7 @@ public interface ExpenseService {
 	public ResponseEntity<List<Map<String, Integer>>> getTopThreeCategoriesOfMonth(UUID userId, String startDate, String endDate);
 
 	public ResponseEntity<Boolean> deleteAllExpensesOfUser(UUID userId);
+
+	public ResponseEntity<List<ExpenseEntity>> getExpensesInDateRangeOf(UUID userId, String fromDate,
+			String toDate);
 }

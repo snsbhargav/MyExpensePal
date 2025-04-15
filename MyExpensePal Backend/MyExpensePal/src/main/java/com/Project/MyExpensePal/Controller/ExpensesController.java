@@ -44,6 +44,12 @@ public class ExpensesController {
 		return expenseService.retreiveExpenseByUserId(UUID.fromString(userId));
 	}
 
+	@GetMapping("/userId/dateRange")
+	public ResponseEntity<List<ExpenseEntity>> getExpensesInDateRangeOf(@RequestHeader("userId") String userId,
+			@RequestHeader("fromDate") String fromDate, @RequestHeader("toDate") String toDate) {
+		return expenseService.getExpensesInDateRangeOf(UUID.fromString(userId), fromDate, toDate);
+	}
+
 	@PutMapping("/updateExpense/{expenseId}")
 	public ResponseEntity<String> updateExpense(@PathVariable UUID expenseId,
 			@RequestBody ExpenseEntity expensesModel) {
@@ -54,9 +60,9 @@ public class ExpensesController {
 	public ResponseEntity<String> deleteExpense(@PathVariable("expenseId") UUID expenseId) {
 		return expenseService.deleteExpense(expenseId);
 	}
-	
+
 	@DeleteMapping("/resetUserAccount")
-	public ResponseEntity<Boolean> deleteAllExpensesOfUser(@RequestHeader("userId") String userId){
+	public ResponseEntity<Boolean> deleteAllExpensesOfUser(@RequestHeader("userId") String userId) {
 		return expenseService.deleteAllExpensesOfUser(UUID.fromString(userId));
 	}
 
@@ -72,9 +78,9 @@ public class ExpensesController {
 		return expenseService.findTotalBasedOnExpenseType(userId, expenseType);
 	}
 
-	//If fromDate and toDate provided it calculates between this period or
-	//If only fromDate provided it takes between fromDate and end of that month.
-	//If none provided it takes present month's start and end date.
+	// If fromDate and toDate provided it calculates between this period or
+	// If only fromDate provided it takes between fromDate and end of that month.
+	// If none provided it takes present month's start and end date.
 	@GetMapping("/getTopThreeCategoriesOfMonth")
 	public ResponseEntity<List<Map<String, Integer>>> getTopThreeCategoriesOfMonth(
 			@RequestHeader("userId") String userId,

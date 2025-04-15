@@ -36,4 +36,7 @@ public interface ExpensesRepository extends JpaRepository<ExpenseEntity, UUID> {
 	@Transactional
 	@Query(nativeQuery = true, value = "DELETE FROM my_expenses_pal.expense_entity WHERE user_id = :userId;")
 	void deleteExpenseByUserId(@Param("userId") UUID userId);
+
+	@Query(nativeQuery = true, value = "SELECT * FROM MY_EXPENSES_PAL.EXPENSE_ENTITY WHERE USER_ID=? AND DATE BETWEEN ? AND ?;")
+	List<ExpenseEntity> getExpensesInDateRangeOf(UUID userId, String fromDate, String toDate);
 }
