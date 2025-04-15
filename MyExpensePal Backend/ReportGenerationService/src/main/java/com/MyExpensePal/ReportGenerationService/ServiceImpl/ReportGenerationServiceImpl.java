@@ -8,11 +8,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -40,6 +42,11 @@ public class ReportGenerationServiceImpl implements ReportGenerationService {
 	public ResponseEntity<Resource> exportReport(UUID userId) throws FileNotFoundException, JRException {
 
 		List<ExpensesModel> expenseList = retrieveExpenseList(userId);
+		return generateReport(expenseList);
+		
+	}
+	
+	private ResponseEntity<Resource> generateReport(List<ExpensesModel> expenseList) throws FileNotFoundException, JRException {
 		File expenseTemplate = ResourceUtils.getFile("classpath:ExpenseReport.jrxml");
 		JasperReport jasperReport = JasperCompileManager.compileReport(expenseTemplate.getAbsolutePath());
 		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(expenseList);
@@ -57,7 +64,7 @@ public class ReportGenerationServiceImpl implements ReportGenerationService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("userId", userId.toString());
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-		return restTemplate.exchange(api, HttpMethod.GET, entity, List.class).getBody();
+		return restTemplate.exchange(api, HttpMethod.GET, entity, new ParameterizedTypeReference<List<ExpensesModel>>() {}).getBody();
 	}
 
 	private ResponseEntity<Resource> generatedFile(byte[] file) {
@@ -67,6 +74,25 @@ public class ReportGenerationServiceImpl implements ReportGenerationService {
 		return ResponseEntity.ok().headers(header).contentLength(file.length).contentType(MediaType.APPLICATION_PDF)
 				.body(resource);
 
+	}
+
+	@Override
+	public ResponseEntity<Resource> generateReportInDateRangeOf(UUID userId, String fromDate, String toDate) throws FileNotFoundException, JRException {
+		List<ExpensesModel> expenseList = retrieveExpenseListInDateRangeOf(userId, fromDate, toDate);
+		if(expenseList.isEmpty())
+			return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+		return generateReport(expenseList);
+	}
+	
+	private List<ExpensesModel> retrieveExpenseListInDateRangeOf(UUID userId, String fromDate, String toDate) {
+		//Passing UserId in header to Expense Service.
+		String api = "lb://MY-EXPENSE-PAL/expense/userId/dateRange";
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("userId", userId.toString());
+		headers.add("fromDate", fromDate.toString() );
+		headers.add("toDate", toDate.toString());
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		return restTemplate.exchange(api, HttpMethod.GET, entity, new ParameterizedTypeReference<List<ExpensesModel>>() {}).getBody();
 	}
 
 }

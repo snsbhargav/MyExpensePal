@@ -19,13 +19,21 @@ import net.sf.jasperreports.engine.JRException;
 @RestController
 @RequestMapping("/report/")
 public class ReportGeneratorController {
-	
+
 	@Autowired
 	ReportGenerationService generationService;
-	
+
 	@GetMapping("/generateReport")
-	public ResponseEntity<Resource> generateReport(@RequestHeader("userId") String userId) throws FileNotFoundException, JRException {
+	public ResponseEntity<Resource> generateReport(@RequestHeader("userId") String userId)
+			throws FileNotFoundException, JRException {
 		return generationService.exportReport(UUID.fromString(userId));
+	}
+
+	@GetMapping("/generateReportInDateRange")
+	public ResponseEntity<Resource> generateReportInDateRangeOf(@RequestHeader("userId") String userId,
+			@RequestHeader("fromDate") String fromDate, @RequestHeader("toDate") String toDate)
+			throws FileNotFoundException, JRException {
+		return generationService.generateReportInDateRangeOf(UUID.fromString(userId), fromDate, toDate);
 	}
 
 }

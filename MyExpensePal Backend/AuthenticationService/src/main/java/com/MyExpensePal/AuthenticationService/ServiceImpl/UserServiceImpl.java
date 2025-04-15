@@ -1,5 +1,7 @@
 package com.MyExpensePal.AuthenticationService.ServiceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +172,17 @@ public class UserServiceImpl implements UserService {
 		header.add("userId", userId.toString());
 		HttpEntity<String> entity = new HttpEntity<>(header);
 		restTemplate.exchange("lb://MY-EXPENSE-PAL/expense/resetUserAccount", HttpMethod.DELETE,entity, void.class);
+	}
+
+	@Override
+	public ResponseEntity<List<UserDto>> findUsersForMonthlyReport(boolean receiveMonthlyExpenseReport) {
+		List<UserDto> userPreferenceDto = new ArrayList<>();
+		for (UserEntity userEntity : userRepository.findUsersWithPreferenceEnabled(receiveMonthlyExpenseReport)) {
+			UserDto userDto = UserMapper.EntityToDto(userEntity);
+			userPreferenceDto.add(userDto);
+		}
+		
+		return new ResponseEntity<List<UserDto>>(userPreferenceDto, HttpStatus.OK);
 	}
 
 

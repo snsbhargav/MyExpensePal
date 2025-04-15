@@ -12,6 +12,7 @@ import com.MyExpensePal.AuthenticationService.Entity.UserEntity;
 import com.MyExpensePal.AuthenticationService.Exception.EMAIL_ALREADY_IN_USE_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Exception.INCORRECT_PASSWORD_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Exception.USER_NOT_FOUND_EXCEPTION;
+import com.github.andrewoma.dexx.collection.List;
 
 @Service
 public interface UserService {
@@ -36,5 +37,7 @@ public interface UserService {
 
 	public ResponseEntity<Boolean> resetAccount(UUID userId, String password)
 			throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION;
+
+	public ResponseEntity<java.util.List<UserDto>> findUsersForMonthlyReport(boolean receiveMonthlyExpenseReport);
 
 }

@@ -1,11 +1,11 @@
 package com.MyExpensePal.AuthenticationService.Contoller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +24,6 @@ import com.MyExpensePal.AuthenticationService.Exception.EMAIL_ALREADY_IN_USE_EXC
 import com.MyExpensePal.AuthenticationService.Exception.INCORRECT_PASSWORD_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Exception.USER_NOT_FOUND_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Service.UserService;
-
-import lombok.experimental.PackagePrivate;
 
 @RestController
 @RequestMapping("/auth")
@@ -62,6 +60,11 @@ public class UserController {
 	@GetMapping("/getUser")
 	public ResponseEntity<UserDto> getUSerById(@RequestHeader("userId") String userId) throws USER_NOT_FOUND_EXCEPTION {
 		return userService.findUserById(UUID.fromString(userId));
+	}
+	
+	@GetMapping("/getAllUsers/{receiveMonthlyExpenseReport}")
+	public ResponseEntity<List<UserDto>> getAllUsers(@PathVariable boolean receiveMonthlyExpenseReport){
+		return userService.findUsersForMonthlyReport(receiveMonthlyExpenseReport);
 	}
 
 	@GetMapping("/isUserInDatabase")
