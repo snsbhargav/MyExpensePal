@@ -1,17 +1,12 @@
 package com.Project.MyExpensePal.Controller;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ServerWebExchange;
-
 import com.Project.MyExpensePal.Entity.ExpenseEntity;
 import com.Project.MyExpensePal.Exception.NO_FILTERS_TO_GENETRATE_QUERY_EXCEPTION;
 import com.Project.MyExpensePal.Exception.NO_USER_EXPENSES_FOUND_EXCEPTION;
 import com.Project.MyExpensePal.Service.ExpenseService;
-
-import io.micrometer.common.lang.Nullable;
 
 @RestController
 @RequestMapping("/expense/")
@@ -54,6 +45,12 @@ public class ExpensesController {
 		return expenseService.retreiveExpenseByUserId(UUID.fromString(userId));
 	}
 
+	@GetMapping("/userId/dateRange")
+	public ResponseEntity<List<ExpenseEntity>> getExpensesInDateRangeOf(@RequestHeader("userId") String userId,
+			@RequestHeader("fromDate") String fromDate, @RequestHeader("toDate") String toDate) {
+		return expenseService.getExpensesInDateRangeOf(UUID.fromString(userId), fromDate, toDate);
+	}
+
 	@PutMapping("/updateExpense/{expenseId}")
 	public ResponseEntity<String> updateExpense(@PathVariable UUID expenseId,
 			@RequestBody ExpenseEntity expensesModel) {
@@ -63,6 +60,11 @@ public class ExpensesController {
 	@DeleteMapping("/deleteExpense/{expenseId}")
 	public ResponseEntity<String> deleteExpense(@PathVariable("expenseId") UUID expenseId) {
 		return expenseService.deleteExpense(expenseId);
+	}
+
+	@DeleteMapping("/resetUserAccount")
+	public ResponseEntity<Boolean> deleteAllExpensesOfUser(@RequestHeader("userId") String userId) {
+		return expenseService.deleteAllExpensesOfUser(UUID.fromString(userId));
 	}
 
 	@GetMapping("/tenLatestTransactions")

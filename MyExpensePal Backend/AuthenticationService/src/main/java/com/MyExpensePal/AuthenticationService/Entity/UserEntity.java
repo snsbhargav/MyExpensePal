@@ -3,11 +3,13 @@ package com.MyExpensePal.AuthenticationService.Entity;
 import java.sql.Date;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,5 +39,7 @@ public class UserEntity {
 	private String bio;
 	private String phone;
 //	TODO Add for profile picture
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = true, mappedBy = "userEntity")
+	private UserSettingsEntity settings;
 
 }

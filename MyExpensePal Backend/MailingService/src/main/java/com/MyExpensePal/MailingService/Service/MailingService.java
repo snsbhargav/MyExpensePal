@@ -11,4 +11,5 @@ public interface MailingService {
 
 	String generateAndSendFullReport(UUID userId) throws MessagingException;
 
+	void sendMonthlyReportToUsers() throws MessagingException;
 }

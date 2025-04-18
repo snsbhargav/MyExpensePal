@@ -182,7 +182,18 @@ public class ExpenseServiceImpl implements ExpenseService {
 		if(isFilterNull)
 			return null;
 		return query;
-				
+	}
+
+	public ResponseEntity<Boolean> deleteAllExpensesOfUser(UUID userId) {
+		expensesRepository.deleteExpenseByUserId(userId);
+		return new ResponseEntity<>(true, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<ExpenseEntity>> getExpensesInDateRangeOf(UUID userId, String fromDate,
+			String toDate) {
+		List<ExpenseEntity> expenseListInDateRange = expensesRepository.getExpensesInDateRangeOf(userId, fromDate, toDate);
+		return new ResponseEntity<List<ExpenseEntity>>(expenseListInDateRange, HttpStatus.OK);
 	}
 
 }
