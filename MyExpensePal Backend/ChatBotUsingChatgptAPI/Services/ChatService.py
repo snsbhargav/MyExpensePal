@@ -27,7 +27,7 @@ def get_matching_data(modelResponse, userId):
         "userId": userId
     }
     try:
-        out = requests.get(url="http://localhost:8082/expense/getMatchingEntities", json=modelResponse.__dict__,
+        out = requests.get(url="lb://MY-EXPENSE-PAL/expense/getMatchingEntities", json=modelResponse.__dict__,
                        headers=headers)
     except:
         return "Failed to get matching data"
