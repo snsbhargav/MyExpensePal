@@ -7,10 +7,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.Project.MyExpensePal.Entity.ExpenseEntity;
+
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface ExpensesRepository extends JpaRepository<ExpenseEntity, UUID> {
@@ -27,4 +31,12 @@ public interface ExpensesRepository extends JpaRepository<ExpenseEntity, UUID> {
 	@Query(nativeQuery = true, value = "SELECT expense_type, sum(expense) total FROM my_expenses_pal.expense_entity where user_id=? and"
 			+ " `date` between ? and ? group by expense_type order by total desc limit 3;")
 	List<Map<String, Integer>> getTopThreeCategoriesOfMonth(UUID userId, LocalDate fromDate , LocalDate toDate);
+
+	@Modifying
+	@Transactional
+	@Query(nativeQuery = true, value = "DELETE FROM my_expenses_pal.expense_entity WHERE user_id = :userId;")
+	void deleteExpenseByUserId(@Param("userId") UUID userId);
+
+	@Query(nativeQuery = true, value = "SELECT * FROM MY_EXPENSES_PAL.EXPENSE_ENTITY WHERE USER_ID=? AND DATE BETWEEN ? AND ?;")
+	List<ExpenseEntity> getExpensesInDateRangeOf(UUID userId, String fromDate, String toDate);
 }

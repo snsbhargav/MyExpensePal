@@ -1,17 +1,24 @@
 package com.MyExpensePal.AuthenticationService.ServiceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.MyExpensePal.AuthenticationService.Dto.UpdateUserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserDto;
 import com.MyExpensePal.AuthenticationService.Dto.UserLoginDto;
 import com.MyExpensePal.AuthenticationService.Entity.UserEntity;
+import com.MyExpensePal.AuthenticationService.Entity.UserSettingsEntity;
 import com.MyExpensePal.AuthenticationService.Exception.EMAIL_ALREADY_IN_USE_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Exception.INCORRECT_PASSWORD_EXCEPTION;
 import com.MyExpensePal.AuthenticationService.Exception.USER_NOT_FOUND_EXCEPTION;
@@ -29,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -38,6 +48,12 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// Converting userEmail to lower case
 		user.setEmail(user.getEmail().toLowerCase());
+		//Initialize with default settings
+		UserSettingsEntity defaultSettings = UserSettingsEntity.builder()
+				.receiveMonthlyExpenseReport(true)
+				.build();
+		defaultSettings.setUserEntity(user);
+		user.setSettings(defaultSettings);
 		return new ResponseEntity<>(UserMapper.EntityToDto(userRepository.save(user)), HttpStatus.CREATED);
 	}
 
@@ -77,10 +93,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId) throws USER_NOT_FOUND_EXCEPTION {
-
-		if (userRepository.findById(userId).isEmpty())
-			throw new USER_NOT_FOUND_EXCEPTION();
+	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId, String password) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		resetAccount(userId, password);
+		
+		//Now delete the user
 		userRepository.deleteById(userId);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
@@ -134,5 +150,40 @@ public class UserServiceImpl implements UserService {
 
 		return new ResponseEntity<UserDto>(UserMapper.EntityToDto(updatedUserEntity), HttpStatus.OK);
 	}
+	
+
+	@Override
+	public ResponseEntity<Boolean> resetAccount(UUID userId, String password)
+			throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		UserEntity user = userRepository.findById(userId).get();
+		if (user == null)
+			throw new USER_NOT_FOUND_EXCEPTION();
+		//Check if the password matches
+		if (!passwordEncoder.matches(password, user.getPassword()))
+			throw new INCORRECT_PASSWORD_EXCEPTION();
+		
+		//Delete all the expenses as well
+		removeAllExpensesOfUser(userId);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	private void removeAllExpensesOfUser(UUID userId) {
+		HttpHeaders header = new HttpHeaders();
+		header.add("userId", userId.toString());
+		HttpEntity<String> entity = new HttpEntity<>(header);
+		restTemplate.exchange("lb://MY-EXPENSE-PAL/expense/resetUserAccount", HttpMethod.DELETE,entity, void.class);
+	}
+
+	@Override
+	public ResponseEntity<List<UserDto>> findUsersForMonthlyReport(boolean receiveMonthlyExpenseReport) {
+		List<UserDto> userPreferenceDto = new ArrayList<>();
+		for (UserEntity userEntity : userRepository.findUsersWithPreferenceEnabled(receiveMonthlyExpenseReport)) {
+			UserDto userDto = UserMapper.EntityToDto(userEntity);
+			userPreferenceDto.add(userDto);
+		}
+		
+		return new ResponseEntity<List<UserDto>>(userPreferenceDto, HttpStatus.OK);
+	}
+
 
 }

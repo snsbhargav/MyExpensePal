@@ -11,7 +11,10 @@ import net.sf.jasperreports.engine.JRException;
 
 @Service
 public interface ReportGenerationService {
-	
+
 	public ResponseEntity<Resource> exportReport(UUID userId) throws FileNotFoundException, JRException;
+
+	public ResponseEntity<Resource> generateReportInDateRangeOf(UUID userId, String fromDate, String toDate)
+			throws FileNotFoundException, JRException;
 
 }

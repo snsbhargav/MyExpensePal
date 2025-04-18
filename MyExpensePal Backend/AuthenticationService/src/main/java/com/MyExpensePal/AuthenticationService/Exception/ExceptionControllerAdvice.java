@@ -23,4 +23,9 @@ public class ExceptionControllerAdvice {
 		return new ResponseEntity<String>("Incorrect Password.", HttpStatus.OK);
 	}
 	
+	@ExceptionHandler(ENTITY_FAILED_TO_SAVE_EXCEPTION.class)
+	public ResponseEntity<String> emailAlreadyInUse(ENTITY_FAILED_TO_SAVE_EXCEPTION exception) {
+		return new ResponseEntity<String>("Entity Failed to save", HttpStatus.OK);
+	}
+	
 }
