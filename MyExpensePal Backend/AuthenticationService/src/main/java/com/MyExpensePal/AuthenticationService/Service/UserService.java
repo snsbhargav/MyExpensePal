@@ -25,7 +25,7 @@ public interface UserService {
 
 	public ResponseEntity<UserDto> findUserByEmail(String email) throws USER_NOT_FOUND_EXCEPTION;
 
-	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId, String password)
+	public ResponseEntity<Boolean> deleteUserFromDatabase(UUID userId, String password, String token)
 			throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION;
 
 	public ResponseEntity<UserDto> findUserById(UUID userId) throws USER_NOT_FOUND_EXCEPTION;
@@ -35,7 +35,7 @@ public interface UserService {
 	public ResponseEntity<UserDto> updateUser(String userId, UpdateUserDto updateUserDto)
 			throws USER_NOT_FOUND_EXCEPTION, EMAIL_ALREADY_IN_USE_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION;
 
-	public ResponseEntity<Boolean> resetAccount(UUID userId, String password)
+	public ResponseEntity<Boolean> resetAccount(UUID userId, String password, String token)
 			throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION;
 
 	public ResponseEntity<java.util.List<UserDto>> findUsersForMonthlyReport(boolean receiveMonthlyExpenseReport);

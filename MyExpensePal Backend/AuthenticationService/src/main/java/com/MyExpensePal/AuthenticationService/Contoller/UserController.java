@@ -81,15 +81,15 @@ public class UserController {
 
 	@DeleteMapping("/resetAccount")
 	public ResponseEntity<Boolean> resetAccount(@RequestHeader("userId") String userId,
-			@RequestHeader("password") String password) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
-		return userService.resetAccount(UUID.fromString(userId), password);
+			@RequestHeader("password") String password, @RequestHeader("Authorization") String token) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		return userService.resetAccount(UUID.fromString(userId), password, token);
 	}
 
 	// Pass password in header
 	@DeleteMapping("/deleteAccount")
 	public ResponseEntity<Boolean> deleteUser(@RequestHeader("userId") String userId,
-			@RequestHeader("password") String password) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
-		return userService.deleteUserFromDatabase(UUID.fromString(userId), password);
+			@RequestHeader("password") String password, @RequestHeader("Authorization") String token) throws USER_NOT_FOUND_EXCEPTION, INCORRECT_PASSWORD_EXCEPTION {
+		return userService.deleteUserFromDatabase(UUID.fromString(userId), password, token);
 	}
 
 }

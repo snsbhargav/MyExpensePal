@@ -47,10 +47,10 @@ public class ExpenseServiceImpl implements ExpenseService {
 		HttpHeaders header = new HttpHeaders();
 		header.add("userId", userId);
 		HttpEntity<String> entity = new HttpEntity<>(header);
-		
-		if (!restTemplate.exchange("lb://AUTHENTICATION-SERVICE/auth/isUserInDatabase", HttpMethod.GET, entity, Boolean.class).getBody()) {
-			return new ResponseEntity<String>("User not found in the database", HttpStatus.NOT_FOUND);
-		}
+		//User was already confirmed at token validation.
+//		if (!restTemplate.exchange("lb://AUTHENTICATION-SERVICE/auth/isUserInDatabase", HttpMethod.GET, entity, Boolean.class).getBody()) {
+//			return new ResponseEntity<String>("User not found in the database", HttpStatus.NOT_FOUND);
+//		}
 		//Add userId to the entity
 		expenseEntity.setUserId(UUID.fromString(userId));
 		//Check if expenseType is null

@@ -38,10 +38,11 @@ public class MailingServiceImpl implements MailingService {
 	private String fromEmail;
 
 	@Override
-	public String generateAndSendFullReport(UUID userId) throws MessagingException {
+	public String generateAndSendFullReport(UUID userId, String token) throws MessagingException {
 		// Creating an entity with userId in it.
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("userId", userId.toString());
+		headers.add("Authorization", token);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
 		UserDto user = getUser(entity);
@@ -66,6 +67,7 @@ public class MailingServiceImpl implements MailingService {
 			headers.add("fromDate", fromDate.toString());
 			headers.add("toDate", toDate.toString());
 			headers.add("userId", user.getUserId().toString());
+//			headers.add("Authorization", token);
 			System.out.println(fromDate +" - "+toDate);
 			HttpEntity<String> entity = new HttpEntity<>(headers);
 			Resource generatedReport = generateExpenseReportInDateRangeOf(entity);
